@@ -184,7 +184,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         });
 
     return (
-        <div className="min-h-screen bg-background font-sans text-foreground">
+        <div className="app-shell min-h-screen bg-background font-sans text-foreground">
             {/* Lien d'evitement : premiere tabulation, il saute la navigation. */}
             <a
                 href="#main-content"
@@ -210,7 +210,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                     <div className="flex h-16 items-center justify-between border-b border-border px-5">
                         <Link to="/" className="flex items-center gap-3" onClick={closeMenus}>
                             <img src={`${import.meta.env.BASE_URL}hearth-mark.svg`} alt="Hearth" className="h-8 w-8 object-contain" />
-                            <span className="text-lg font-semibold tracking-tight">Hearth</span>
+                            <span className="app-brand text-[20px]">Hearth</span>
                         </Link>
                         <button
                             type="button"

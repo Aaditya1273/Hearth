@@ -33,7 +33,7 @@ interface HeroProps {
 
 /** Rounded hero band for the family dashboard. */
 const HearthHero: React.FC<HeroProps> = ({ children, className, position }) => (
-    <section className={cn('relative isolate overflow-hidden rounded-[20px] bg-[#1d3328] shadow-surface', className)}>
+    <section data-hero className={cn('relative isolate overflow-hidden rounded-[20px] bg-[#1d3328] shadow-surface', className)}>
         <HeroPicture position={position} />
         {/* Reading side: dark forest on the left (wide screens), from the bottom on phones. */}
         <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[#14231b]/95 via-[#14231b]/70 to-[#14231b]/20 md:bg-gradient-to-r md:from-[#14231b]/92 md:via-[#14231b]/60 md:to-transparent" />

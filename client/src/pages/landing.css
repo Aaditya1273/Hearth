@@ -1,10 +1,4 @@
 /* Landing page only (imported by Landing.tsx). */
-@font-face {
-    font-family: 'Epilogue';
-    src: url('/fonts/Epilogue-VariableFont_wght.ttf') format('truetype');
-    font-weight: 100 900;
-    font-display: swap;
-}
 
 .hl { font-family: 'Epilogue', 'Inter', system-ui, sans-serif; }
 .hl-heavy { font-weight: 900; letter-spacing: -0.045em; line-height: 0.92; }
@@ -27,3 +21,9 @@
     .hl-drift img, .hl-marquee { animation: none; }
     .hl-draw { stroke-dashoffset: 0; }
 }
+
+/* Sign-in clips: captions rise in, and lift away before the next clip. */
+@keyframes hl-rise { from { opacity: 0; transform: translateY(12px); } }
+.hl-rise { animation: hl-rise .6s cubic-bezier(.2,.9,.3,1) both; transition: opacity .8s ease, transform .8s ease; }
+.hl-leaving { opacity: 0; transform: translateY(-16px); }
+@media (prefers-reduced-motion: reduce) { .hl-rise { animation: none; transition: none; } }

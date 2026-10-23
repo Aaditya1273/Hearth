@@ -145,3 +145,30 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* Brand display face (OFL, public/fonts), shared by the landing page and the app. */
+@font-face {
+    font-family: 'Epilogue';
+    src: url('/fonts/Epilogue-VariableFont_wght.ttf') format('truetype');
+    font-weight: 100 900;
+    font-display: swap;
+}
+
+/* One title scale on every app page. Unlayered, so it outranks a page's own size
+   utilities; the photo banner on the dashboard keeps its serif title. */
+.app-shell main h1:not([data-hero] h1) {
+    font-family: 'Epilogue', 'Inter', system-ui, sans-serif;
+    font-weight: 800;
+    font-size: 30px;
+    line-height: 1.15;
+    letter-spacing: -0.035em;
+}
+.app-shell main h1:not([data-hero] h1) + p {
+    font-size: 15px;
+    line-height: 1.55;
+    margin-top: 6px;
+    max-width: 72ch;
+}
+.app-shell .app-brand { font-family: 'Epilogue', 'Inter', sans-serif; font-weight: 800; letter-spacing: -0.04em; }
+/* Pill buttons everywhere in the app, as on the landing page. */
+.app-shell .btn-nexus { border-radius: 9999px; }
