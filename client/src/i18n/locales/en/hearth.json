@@ -303,5 +303,42 @@
       "list_pending_proposals": "proposals",
       "get_local_weather": "local weather"
     }
+  },
+  "home": {
+    "greeting": {
+      "morning": "Good morning, {{name}}.",
+      "afternoon": "Good afternoon, {{name}}.",
+      "evening": "Good evening, {{name}}."
+    },
+    "subtitle": "Your family's care, in one calm place.",
+    "script": "Real people|Real connection|A calmer tomorrow",
+    "day": "{{name}}'s day",
+    "checkIn": "Check in with {{name}}",
+    "sharingLevel": "Sharing level",
+    "chooses": "{{name}} chooses what to share",
+    "why": "Why this status?",
+    "addTask": "Add a new task",
+    "planHint": "Find a time that works for everyone",
+    "control": "{{name}} is always in control",
+    "controlBody": "She decides what to share, with whom, and for how long. Every look is in the Trust Ledger.",
+    "manage": "Manage sharing",
+    "tiles": {
+      "activity": "Daily activity",
+      "started": "Day started",
+      "door": "Front door",
+      "routine": "Routine",
+      "lastSeen": "Last seen {{time}}",
+      "usually": "Usually by {{time}}",
+      "notShared": "Not shared at {{level}}",
+      "hidden": "Not shared",
+      "quiet": "All quiet",
+      "noDoor": "No door event today",
+      "sharedAtGlimpse": "Shared at Glimpse",
+      "learned": "Learned",
+      "learning": "Still learning",
+      "days": "{{days}} of {{needed}} days observed",
+      "signals_one": "{{count}} signal today",
+      "signals_other": "{{count}} signals today"
+    }
   }
 }
