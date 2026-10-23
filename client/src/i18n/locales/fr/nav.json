@@ -74,5 +74,7 @@
   "pageTitleFallback": "Tableau de bord",
   "skipToContent": "Aller au contenu",
   "primaryNav": "Navigation principale",
-  "mobileNav": "Navigation rapide"
+  "mobileNav": "Navigation rapide",
+  "askPlaceholder": "Demandez ou cherchez…",
+  "builtFor": "Pensé pour les familles. Centré sur l’essentiel."
 }

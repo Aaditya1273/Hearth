@@ -74,5 +74,7 @@
   "pageTitleFallback": "Panel",
   "skipToContent": "Ir al contenido",
   "primaryNav": "Navegación principal",
-  "mobileNav": "Navegación rápida"
+  "mobileNav": "Navegación rápida",
+  "askPlaceholder": "Pregunta o busca…",
+  "builtFor": "Pensado para las familias. Centrado en lo que importa."
 }

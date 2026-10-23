@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import {
     Phone, Heart, ShieldCheck, Sparkles, CalendarHeart, ListChecks, Info, Video, FlaskConical,
     ChevronRight, Plus, Activity, Sunrise, DoorOpen, Sprout, Leaf, Clock,
@@ -190,7 +190,7 @@ const Hearth: React.FC = () => {
     ];
 
     return (
-        <div className="mx-auto max-w-[1200px] space-y-5">
+        <div className="space-y-5">
             {/* Greeting: serif, like the photo banner it replaces */}
             <div data-hero className="relative flex flex-wrap items-end justify-between gap-4 pb-1">
                 <div>
@@ -494,6 +494,7 @@ const AskHearthCard: React.FC<{ name: string }> = ({ name }) => {
     const [result, setResult] = useState<AskAnswer | null>(null);
     const [error, setError] = useState('');
     const suggestions = (t('ask.suggestions', { returnObjects: true, name }) as unknown as string[]) ?? [];
+    const [params, setParams] = useSearchParams();
 
     const ask = async (q: string) => {
         const text = q.trim();
@@ -510,6 +511,16 @@ const AskHearthCard: React.FC<{ name: string }> = ({ name }) => {
             setBusy(false);
         }
     };
+
+    // A question typed in the top bar's "Ask or search" box arrives as ?ask=.
+    useEffect(() => {
+        const q = params.get('ask');
+        if (!q) return;
+        setParams((prev) => { prev.delete('ask'); return prev; }, { replace: true });
+        document.getElementById('ask-hearth')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        void ask(q);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [params]);
 
     return (
         <Section icon={Sparkles} title={t('ask.title')}>

@@ -74,5 +74,7 @@
   "pageTitleFallback": "Dashboard",
   "skipToContent": "Skip to content",
   "primaryNav": "Main navigation",
-  "mobileNav": "Quick navigation"
+  "mobileNav": "Quick navigation",
+  "askPlaceholder": "Ask or search anything…",
+  "builtFor": "Built for families. Centered on what matters."
 }
