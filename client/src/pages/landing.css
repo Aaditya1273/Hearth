@@ -1,0 +1,29 @@
+/* Landing page only (imported by Landing.tsx). */
+@font-face {
+    font-family: 'Epilogue';
+    src: url('/fonts/Epilogue-VariableFont_wght.ttf') format('truetype');
+    font-weight: 100 900;
+    font-display: swap;
+}
+
+.hl { font-family: 'Epilogue', 'Inter', system-ui, sans-serif; }
+.hl-heavy { font-weight: 900; letter-spacing: -0.045em; line-height: 0.92; }
+.hl-serif { font-family: 'Fraunces Variable', Georgia, serif; font-style: italic; font-weight: 400; letter-spacing: -0.02em; }
+
+/* Slow drift on the hero photograph. */
+@keyframes hl-drift { from { transform: scale(1.04); } to { transform: scale(1.12) translate(-1%, -1%); } }
+.hl-drift img { animation: hl-drift 22s ease-in-out infinite alternate; transform-origin: 65% 50%; }
+
+/* Marquee rows: two copies of the content, translated by half. */
+@keyframes hl-marquee { to { transform: translateX(-50%); } }
+.hl-marquee { display: flex; width: max-content; animation: hl-marquee 38s linear infinite; }
+.hl-marquee--reverse { animation-direction: reverse; animation-duration: 44s; }
+.hl-marquee-wrap:hover .hl-marquee { animation-play-state: paused; }
+
+/* Lines drawn on scroll start hidden; GSAP draws them. */
+.hl-draw { stroke-dasharray: 1; stroke-dashoffset: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+    .hl-drift img, .hl-marquee { animation: none; }
+    .hl-draw { stroke-dashoffset: 0; }
+}

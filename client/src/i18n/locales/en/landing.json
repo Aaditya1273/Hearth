@@ -3,13 +3,14 @@
     "home": "Home",
     "how": "How it works",
     "families": "For Families",
-    "parents": "For Parents",
-    "privacy": "Security & Privacy",
+    "parents": "For parents",
+    "privacy": "Privacy",
     "pricing": "Pricing",
     "signIn": "Sign in",
     "getStarted": "Get Started",
     "menu": "Menu",
-    "close": "Close menu"
+    "close": "Close menu",
+    "faq": "FAQ"
   },
   "hero": {
     "eyebrow": [
@@ -278,5 +279,91 @@
     "source": "Source code",
     "attribution": "Built on OpenCare by NexaFlow, licensed AGPL-3.0.",
     "disclaimer": "Hearth is not a medical device or an emergency service. In an emergency, call your local emergency number."
+  },
+  "hero2": {
+    "line1": "a calmer way to care",
+    "line2": "for the people you",
+    "word": "love",
+    "lead": "Hearth turns the small signals of a home into one calm answer for the family. No video, no intrusion, and your parent decides what you see.",
+    "status": "Margaret had a normal day",
+    "statusSub": "Day started 7:42 · front door at 9:12",
+    "example": "Example"
+  },
+  "words": {
+    "text": "a normal day, without a camera in her home",
+    "lead": "A door opens at 9:12. The kettle goes on. Hearth knows her usual morning and tells the family it was a normal one. When it isn't, it says why and suggests a call."
+  },
+  "cards": {
+    "title": "built on trust,",
+    "titleSerif": "not on watching.",
+    "labels": [
+      "she sees who looked",
+      "no video, ever",
+      "nothing happens until someone says yes",
+      "not enough data? it says so"
+    ],
+    "alts": [
+      "The family dashboard",
+      "The Trust Ledger",
+      "Margaret at home"
+    ],
+    "lead": "Every view, from the family app, Alexa+ or Ask Hearth, is built on the server from the fields she allows, then written to a ledger she can read. Family members cannot raise her level, not even an admin."
+  },
+  "inside": {
+    "title": "what's inside",
+    "items": [
+      {
+        "name": "Why Cards",
+        "body": "What was observed, her usual pattern, the evidence, and one sensible next step."
+      },
+      {
+        "name": "Glimpse Dial",
+        "body": "Light, Rhythm, Glimpse or Recovery. She picks, on her own screen."
+      },
+      {
+        "name": "Trust Ledger",
+        "body": "Every look and every change, in plain words, for her to read."
+      },
+      {
+        "name": "Piggyback Planner",
+        "body": "Visiting Saturday? The errand that fits your trip. Nothing is assigned until someone says yes."
+      },
+      {
+        "name": "Moments",
+        "body": "A short message or video on her Hearth screen, and when it was seen."
+      },
+      {
+        "name": "Ask Hearth",
+        "body": "“How is Mom today?” answered by Amazon Bedrock, limited to what she shares."
+      }
+    ]
+  },
+  "marquee": {
+    "a": [
+      "Ring",
+      "Alexa+",
+      "Amazon Bedrock",
+      "Home Assistant",
+      "open source",
+      "AGPL-3.0"
+    ],
+    "b": [
+      "no video",
+      "no facial recognition",
+      "she sees who looked",
+      "not enough data means not enough data",
+      "not a medical device"
+    ]
+  },
+  "foot": {
+    "openLabel": "open source",
+    "openTitle": "read the source :)",
+    "tryLabel": "try it",
+    "tryTitle": "sign in to the demo",
+    "tryNote": "All sensor data in the demo is simulated.",
+    "honestLabel": "honest",
+    "honestTitle": "not a medical device, not an emergency service.",
+    "honestNote": "In an emergency, call your local emergency number.",
+    "attribution": "Built on OpenCare by NexaFlow, licensed AGPL-3.0."
   }
 }

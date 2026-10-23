@@ -1,54 +1,38 @@
-import React, { useState } from 'react';
+import React, { useLayoutEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import {
-    ArrowRight, ShieldCheck, Menu, X, PlugZap, Sprout, BellRing, Sparkles, Route, MessageSquareHeart, MessagesSquare, Mic,
-    Plane, UserCheck, MonitorSmartphone, Check, Play, ChevronRight, Heart, Sun, DoorOpen, Leaf, Lock, Users, Home, CalendarCheck, Plus, Eye,
-} from 'lucide-react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { InertiaPlugin } from 'gsap/InertiaPlugin';
+import Lenis from 'lenis';
+import { ArrowRight, ArrowUpRight, Menu, X, Check, Plus, Eye } from 'lucide-react';
 import { cn } from '../lib/utils';
-import HearthLogo from '../components/app/HearthLogo';
 import { HeroPicture } from '../components/app/HearthHero';
+import { HeartSticker, DoorSticker, CupSticker, Sparkle, LoopArrow, Blob, Scribble } from '../components/landing/Stickers';
+import './landing.css';
+
+gsap.registerPlugin(ScrollTrigger, InertiaPlugin);
 
 /**
- * Public landing page, shown at "/" to visitors who are not signed in.
- * Honest by construction: no invented figures, testimonials or prices; the
- * one product preview on the photo is labelled "Example".
+ * Public landing page ("/" for visitors who are not signed in).
+ * One orchestrated hero entrance, scroll-driven type, throwable cards, and
+ * the interactive Glimpse Dial. Every animation is skipped when the visitor
+ * prefers reduced motion. Previews over photos are labelled "Example".
  */
 
-const INK = 'text-[#1f2a24]';
-const MUTED = 'text-[#55605a]';
-const display = { fontVariationSettings: '"opsz" 120' } as const;
-
+const BASE = import.meta.env.BASE_URL;
+const DEMO_LOGIN = import.meta.env.VITE_DEMO_LOGIN as string | undefined;
 const NAV = [
-    { key: 'home', href: '#top' },
     { key: 'how', href: '#how' },
-    { key: 'families', href: '#families' },
     { key: 'parents', href: '#parents' },
     { key: 'privacy', href: '#privacy' },
-    { key: 'pricing', href: '#pricing' },
+    { key: 'faq', href: '#faq' },
 ] as const;
+const prefersReduced = () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 type Item = { title: string; body: string };
 
-/** Section heading: one size for every section, left-aligned. */
-const SectionHead: React.FC<{ title: string; lead?: string; dark?: boolean; className?: string }> = ({ title, lead, dark, className }) => (
-    <div className={cn('max-w-[620px]', className)}>
-        <h2 className={cn('font-display text-[34px] font-medium leading-[1.08] tracking-[-0.015em] sm:text-[44px]', dark ? 'text-white' : INK)} style={display}>{title}</h2>
-        {lead && <p className={cn('mt-4 text-[17px] leading-7', dark ? 'text-white/75' : MUTED)}>{lead}</p>}
-    </div>
-);
-
-/** A product screenshot in a quiet window frame. */
-const Shot: React.FC<{ src: string; alt: string; className?: string }> = ({ src, alt, className }) => (
-    <figure className={cn('overflow-hidden rounded-[24px] border border-[#e3dccf] bg-white shadow-[0_40px_80px_-40px_rgba(31,42,36,0.45)]', className)}>
-        <div className="flex h-9 items-center gap-1.5 border-b border-[#eee8dd] bg-[#fbf9f5] px-4" aria-hidden="true">
-            <span className="h-2.5 w-2.5 rounded-full bg-[#e4ddd0]" /><span className="h-2.5 w-2.5 rounded-full bg-[#e4ddd0]" /><span className="h-2.5 w-2.5 rounded-full bg-[#e4ddd0]" />
-        </div>
-        <img src={`${import.meta.env.BASE_URL}hearth/${src}`} alt={alt} loading="lazy" decoding="async" className="block w-full" width={1152} height={836} />
-    </figure>
-);
-
-/** The Glimpse Dial drawn as a half-circle gauge; the buttons below it are the real control. */
+/** The Glimpse Dial as a half-circle gauge; the buttons below it are the real control. */
 const DialArc: React.FC<{ level: number }> = ({ level }) => {
     const cx = 160, cy = 150, r = 120;
     const pt = (deg: number) => [cx + r * Math.cos((deg * Math.PI) / 180), cy - r * Math.sin((deg * Math.PI) / 180)];
@@ -56,263 +40,241 @@ const DialArc: React.FC<{ level: number }> = ({ level }) => {
         const [x1, y1] = pt(180 - 45 * i - 3); const [x2, y2] = pt(180 - 45 * (i + 1) + 3);
         return `M ${x1} ${y1} A ${r} ${r} 0 0 1 ${x2} ${y2}`;
     };
-    const needle = 180 - 45 * level - 22.5;
-    const [nx, ny] = [cx + 92 * Math.cos((needle * Math.PI) / 180), cy - 92 * Math.sin((needle * Math.PI) / 180)];
+    const a = ((180 - 45 * level - 22.5) * Math.PI) / 180;
     return (
         <svg viewBox="0 0 320 170" className="w-full max-w-[340px]" aria-hidden="true">
             {[0, 1, 2, 3].map((i) => (
                 <path key={i} d={arc(i)} fill="none" strokeWidth={22} strokeLinecap="round"
-                    stroke={i <= level ? `rgba(232,160,122,${0.45 + i * 0.18})` : 'rgba(255,255,255,0.10)'} className="transition-[stroke] duration-300" />
+                    stroke={i <= level ? `rgba(240,183,150,${0.45 + i * 0.18})` : 'rgba(255,255,255,0.10)'} className="transition-[stroke] duration-300" />
             ))}
-            <line x1={cx} y1={cy} x2={nx} y2={ny} stroke="#fff" strokeWidth={4} strokeLinecap="round" className="transition-all duration-300 motion-reduce:transition-none" />
+            <line x1={cx} y1={cy} x2={cx + 92 * Math.cos(a)} y2={cy - 92 * Math.sin(a)} stroke="#fff" strokeWidth={4} strokeLinecap="round" className="transition-all duration-500 motion-reduce:transition-none" />
             <circle cx={cx} cy={cy} r={10} fill="#fff" />
         </svg>
     );
 };
 
-const GetStarted: React.FC<{ label: string; className?: string }> = ({ label, className }) => (
-    <Link to="/login" className={cn('inline-flex h-12 items-center justify-center gap-2 rounded-[10px] bg-[#234a36] px-6 text-[15px] font-semibold text-white shadow-[0_6px_18px_-8px_rgba(35,74,54,0.7)] transition-colors hover:bg-[#1c3c2c] focus:outline-none focus-visible:ring-4 focus-visible:ring-[#234a36]/30', className)}>
-        {label}
-        <ArrowRight className="h-4 w-4" aria-hidden="true" />
-    </Link>
-);
-
 const Landing: React.FC = () => {
     const { t } = useTranslation('landing');
-    const [menuOpen, setMenuOpen] = useState(false);
     const list = <T,>(key: string) => t(key, { returnObjects: true }) as unknown as T[];
+    const [menuOpen, setMenuOpen] = useState(false);
     const [level, setLevel] = useState(1);
-    const familyIcons = [Sparkles, Route, MessageSquareHeart, MessagesSquare];
-    const parentIcons = [Plane, UserCheck, MonitorSmartphone];
-    const stepIcons = [PlugZap, Sprout, BellRing];
-    const pointIcons = [Leaf, Lock, Users];
-    const cardIcons = [Sun, DoorOpen, Mic];
-    const benefitIcons = [Home, CalendarCheck, Users, ShieldCheck];
+    const root = useRef<HTMLDivElement>(null);
+
+    // Smooth scrolling, driven by the GSAP ticker so ScrollTrigger stays in sync.
+    useLayoutEffect(() => {
+        if (prefersReduced()) return;
+        const lenis = new Lenis({ duration: 1.15, easing: (x) => Math.min(1, 1.001 - Math.pow(2, -10 * x)), anchors: true });
+        lenis.on('scroll', ScrollTrigger.update);
+        const tick = (time: number) => lenis.raf(time * 1000);
+        gsap.ticker.add(tick);
+        gsap.ticker.lagSmoothing(0);
+        return () => { gsap.ticker.remove(tick); lenis.destroy(); };
+    }, []);
+
+    useLayoutEffect(() => {
+        if (prefersReduced() || !root.current) return;
+        const el = root.current;
+        const ctx = gsap.context(() => {
+            // ① Hero: one orchestrated entrance.
+            gsap.timeline({ defaults: { ease: 'power4.out' } })
+                .from('.hl-hero-line', { yPercent: 110, duration: 1.2, stagger: 0.12 })
+                .from('.hl-hero-heart', { scale: 0, rotation: -40, duration: 1.6, ease: 'elastic.out(1, 0.4)' }, 0.7)
+                .from('.hl-hero-fade', { y: 24, opacity: 0, duration: 0.9, stagger: 0.08 }, 0.6);
+
+            // ② Pinned sentence that travels sideways while each letter settles.
+            const words = el.querySelector<HTMLElement>('.hl-words');
+            const track = el.querySelector<HTMLElement>('.hl-track');
+            if (words && track) {
+                const travel = gsap.fromTo(track, { x: () => window.innerWidth * 0.85 }, {
+                    x: () => -(track.scrollWidth - window.innerWidth * 0.15), ease: 'none',
+                    scrollTrigger: { trigger: words, start: 'top top', end: () => `+=${track.scrollWidth}`, pin: true, scrub: 1, invalidateOnRefresh: true },
+                });
+                track.querySelectorAll('.hl-letter').forEach((letter) => {
+                    gsap.from(letter, {
+                        yPercent: (Math.random() - 0.5) * 420, rotation: (Math.random() - 0.5) * 60, ease: 'elastic.out(1.2, 1)',
+                        scrollTrigger: { trigger: letter, containerAnimation: travel, start: 'left 98%', end: 'left 60%', scrub: 0.5 },
+                    });
+                });
+                track.querySelectorAll('.hl-sticker').forEach((s) => {
+                    gsap.from(s, {
+                        scale: 0, rotation: (Math.random() - 0.5) * 70, ease: 'elastic.out(1.2, 1)',
+                        scrollTrigger: { trigger: s, containerAnimation: travel, start: 'left 95%', end: 'left 60%', scrub: 0.5 },
+                    });
+                });
+            }
+
+            // ③ Lines that draw themselves as they come into view.
+            gsap.utils.toArray<SVGPathElement>('.hl-draw').forEach((p) => {
+                gsap.to(p, { strokeDashoffset: 0, duration: 1.4, ease: 'power2.inOut', scrollTrigger: { trigger: p, start: 'top 85%' } });
+            });
+
+            // ④ Photo cards drop in, then can be "thrown" with the mouse.
+            gsap.from('.hl-card', { y: 120, rotation: (i: number) => (i % 2 ? 12 : -12), opacity: 0, duration: 1.2, stagger: 0.12, ease: 'power3.out', scrollTrigger: { trigger: '.hl-stage', start: 'top 75%' } });
+            gsap.from('.hl-pill', { scale: 0, duration: 1.2, stagger: 0.1, ease: 'elastic.out(1, 0.5)', scrollTrigger: { trigger: '.hl-stage', start: 'top 60%' } });
+            gsap.utils.toArray<HTMLElement>('.hl-card, .hl-pill').forEach((item) => {
+                let lx = 0, ly = 0, vx = 0, vy = 0;
+                item.addEventListener('mouseenter', (e) => { lx = e.clientX; ly = e.clientY; vx = vy = 0; });
+                item.addEventListener('mousemove', (e) => { vx = e.clientX - lx; vy = e.clientY - ly; lx = e.clientX; ly = e.clientY; });
+                item.addEventListener('mouseleave', () => {
+                    gsap.to(item, { inertia: { x: { velocity: vx * 22, end: 0 }, y: { velocity: vy * 22, end: 0 }, rotation: { velocity: vx * 1.6, end: Number(item.dataset.rot ?? 0) } } });
+                });
+            });
+        }, el);
+        return () => ctx.revert();
+    }, []);
+
+    const cta = 'inline-flex h-12 items-center justify-center gap-2 rounded-full px-6 text-[15px] font-semibold transition-transform duration-300 [transition-timing-function:cubic-bezier(0.34,1.56,0.64,1)] hover:scale-[1.04] focus:outline-none focus-visible:ring-4';
+    const tiles = ['bg-[#234a36] text-white', 'bg-[#e8806b] text-[#1f2a24]', 'bg-[#14231b] text-white', 'bg-[#f3d9b8] text-[#1f2a24]', 'bg-[#cfe0d4] text-[#1f2a24]', 'bg-[#b5643d] text-white'];
+    const sentence = t('words.text').split(' ');
+    const dialTitle = t('dial.title').split(' ');
 
     return (
-        <div id="top" className={cn('min-h-screen bg-[#f7f4ee] font-sans antialiased', INK)}>
-            {/* ── Header ── */}
-            <header className="sticky top-0 z-40 border-b border-[#e6e0d4]/70 bg-[#f7f4ee]/90 backdrop-blur-md">
-                <div className="mx-auto flex h-[72px] max-w-[1200px] items-center justify-between gap-6 px-4 sm:px-6">
-                    <a href="#top" aria-label="Hearth"><HearthLogo /></a>
-                    <nav aria-label={t('nav.menu')} className="hidden items-center gap-8 lg:flex">
-                        {NAV.map((n, i) => (
-                            <a key={n.key} href={n.href} className={cn('text-[15px] transition-colors hover:text-[#234a36]', i === 0 ? 'font-semibold text-[#234a36]' : 'text-[#3a453f]')}>
-                                {t(`nav.${n.key}`)}
-                            </a>
-                        ))}
-                    </nav>
-                    <div className="flex items-center gap-2">
-                        <Link to="/login" className="hidden h-11 items-center px-3 text-[15px] font-medium text-[#3a453f] hover:text-[#234a36] sm:inline-flex">{t('nav.signIn')}</Link>
-                        <GetStarted label={t('nav.getStarted')} className="hidden h-11 sm:inline-flex" />
-                        <button type="button" onClick={() => setMenuOpen((o) => !o)} aria-expanded={menuOpen} aria-label={menuOpen ? t('nav.close') : t('nav.menu')}
-                            className="inline-flex h-11 w-11 items-center justify-center rounded-[10px] border border-[#e0d9cc] bg-white lg:hidden">
-                            {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-                        </button>
-                    </div>
-                </div>
-                {menuOpen && (
-                    <nav className="border-t border-[#e6e0d4] bg-[#f7f4ee] px-4 pb-5 pt-2 lg:hidden" aria-label={t('nav.menu')}>
-                        {NAV.map((n) => (
-                            <a key={n.key} href={n.href} onClick={() => setMenuOpen(false)} className="block border-b border-[#ece6da] py-3.5 text-[16px] font-medium">{t(`nav.${n.key}`)}</a>
-                        ))}
-                        <div className="mt-4 grid grid-cols-2 gap-3">
-                            <Link to="/login" className="inline-flex h-12 items-center justify-center rounded-[10px] border border-[#d9d2c4] bg-white font-semibold">{t('nav.signIn')}</Link>
-                            <GetStarted label={t('nav.getStarted')} />
+        <div ref={root} className="hl min-h-screen overflow-x-clip bg-[#f2ede4] text-[#1f2a24] antialiased">
+            {/* ── Hero: the living room, framed ── */}
+            <header id="top" className="h-[100svh] min-h-[640px] p-2 sm:p-3">
+                <div className="relative isolate flex h-full flex-col overflow-hidden rounded-[22px] bg-[#14231b] text-white sm:rounded-[28px]">
+                    <div className="hl-drift absolute inset-0 -z-10"><HeroPicture position="68% 45%" /></div>
+                    <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgba(15,26,20,0.55)_0%,rgba(15,26,20,0.05)_30%,rgba(15,26,20,0.2)_55%,rgba(15,26,20,0.92)_100%)]" />
+                    <span className="sr-only">{t('hero.imageAlt')}</span>
+
+                    <nav aria-label={t('nav.menu')} className="flex items-center justify-between gap-4 px-5 py-5 sm:px-8">
+                        <a href="#top" className="flex items-center gap-2.5 text-[22px] font-extrabold tracking-[-0.03em]">
+                            <img src={`${BASE}hearth-mark.svg`} alt="" className="h-9 w-9" />Hearth
+                        </a>
+                        <ul className="hidden items-center gap-8 text-[15px] font-medium text-white/85 lg:flex">
+                            {NAV.map((n) => <li key={n.key}><a href={n.href} className="transition-colors hover:text-white">{t(`nav.${n.key}`)}</a></li>)}
+                        </ul>
+                        <div className="flex items-center gap-2">
+                            <Link to="/login" className="hidden h-10 items-center rounded-full border border-white/60 px-5 text-[14px] font-semibold transition-colors hover:bg-white hover:text-[#14231b] sm:inline-flex">{t('nav.signIn')}</Link>
+                            <Link to="/login" className={cn(cta, 'hidden h-10 bg-white px-5 text-[14px] text-[#14231b] focus-visible:ring-white/40 sm:inline-flex')}>{t('nav.getStarted')}</Link>
+                            <button type="button" onClick={() => setMenuOpen((o) => !o)} aria-expanded={menuOpen} aria-label={menuOpen ? t('nav.close') : t('nav.menu')}
+                                className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/40 lg:hidden">
+                                {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+                            </button>
                         </div>
                     </nav>
-                )}
+                    {menuOpen && (
+                        <div className="mx-4 rounded-[20px] bg-[#fffaf2] p-4 text-[#1f2a24] shadow-2xl lg:hidden">
+                            {NAV.map((n) => <a key={n.key} href={n.href} onClick={() => setMenuOpen(false)} className="block border-b border-[#ece6da] py-3 text-[17px] font-semibold last:border-0">{t(`nav.${n.key}`)}</a>)}
+                            <Link to="/login" className={cn(cta, 'mt-3 w-full bg-[#234a36] text-white')}>{t('nav.signIn')}</Link>
+                        </div>
+                    )}
+
+                    <div className="mt-auto px-4 pb-8 text-center sm:px-8 sm:pb-12">
+                        <h1 className="hl-heavy mx-auto text-[13.5vw] sm:text-[9vw] lg:text-[6.6vw] 2xl:text-[7.2rem]">
+                            <span className="block overflow-hidden pb-[0.06em]"><span className="hl-hero-line block">{t('hero2.line1')}</span></span>
+                            <span className="block overflow-hidden pb-[0.12em] pt-[0.2em]">
+                                <span className="hl-hero-line block">
+                                    {t('hero2.line2')}{' '}
+                                    <span className="relative inline-block">
+                                        <span className="hl-serif text-[#f0b796]">{t('hero2.word')}</span>
+                                        <HeartSticker className="hl-hero-heart absolute -right-[0.45em] -top-[0.25em] w-[0.55em] rotate-12" />
+                                    </span>
+                                </span>
+                            </span>
+                        </h1>
+                        <p className="hl-hero-fade mx-auto mt-6 max-w-[560px] text-[16px] leading-7 text-white/85 sm:text-[18px]">{t('hero2.lead')}</p>
+                        <div className="hl-hero-fade mt-7 flex flex-wrap items-center justify-center gap-3">
+                            <Link to="/login" className={cn(cta, 'h-[52px] bg-white px-7 text-[16px] text-[#14231b] focus-visible:ring-white/40')}>{t('hero.primary')}<ArrowRight className="h-4 w-4" aria-hidden="true" /></Link>
+                            <a href="#how" className={cn(cta, 'h-[52px] border border-white/50 px-7 text-[16px] text-white focus-visible:ring-white/30')}>{t('hero.secondary')}</a>
+                        </div>
+                    </div>
+
+                    {/* Example status, bottom-left on wide screens */}
+                    <div className="hl-hero-fade absolute bottom-8 left-8 hidden w-[270px] rounded-[18px] border border-white/25 bg-white/15 p-4 backdrop-blur-xl xl:block">
+                        <p className="flex items-center gap-2 text-[14px] font-bold"><span className="h-2 w-2 rounded-full bg-[#7fd39b]" />{t('hero2.status')}</p>
+                        <p className="mt-1 text-[12.5px] text-white/75">{t('hero2.statusSub')}</p>
+                        <span className="mt-2 inline-block rounded-full bg-white/20 px-2 py-0.5 text-[10.5px] font-semibold">{t('hero2.example')}</span>
+                    </div>
+                </div>
             </header>
 
             <main>
-                {/* ── Hero: full-bleed photograph, cream fade on the reading side ── */}
-                <section className="relative isolate overflow-hidden bg-[#f7f4ee]">
-                    <div className="absolute inset-0 hidden lg:block">
-                        <HeroPicture position="78% 50%" />
-                        <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(90deg,#f7f4ee_0%,#f7f4ee_24%,rgba(247,244,238,0.82)_34%,rgba(247,244,238,0.2)_46%,rgba(247,244,238,0)_54%)]" />
+                {/* ── The sentence that travels ── */}
+                <section id="how" className="hl-words relative flex h-[100svh] flex-col justify-center overflow-hidden">
+                    <LoopArrow className="absolute left-[3%] top-[12%] w-[220px] sm:w-[320px]" pathClassName="hl-draw" />
+                    <div className="hl-track hl-heavy flex w-max items-center whitespace-nowrap text-[24vw] will-change-transform sm:text-[17vw] lg:text-[12.5rem]" role="img" aria-label={t('words.text')}>
+                        {sentence.map((w, wi) => (
+                            <React.Fragment key={`${w}-${wi}`}>
+                                <span className="mr-[0.22em] inline-flex" aria-hidden="true">
+                                    {[...w].map((ch, ci) => <span key={ci} className="hl-letter inline-block">{ch}</span>)}
+                                </span>
+                                {wi === 2 && <DoorSticker className="hl-sticker mr-[0.2em] inline-block w-[0.62em] -rotate-6" />}
+                                {wi === 4 && <CupSticker className="hl-sticker mr-[0.2em] inline-block w-[0.7em] rotate-6" />}
+                                {wi === sentence.length - 1 && <HeartSticker className="hl-sticker inline-block w-[0.6em] -rotate-12" />}
+                            </React.Fragment>
+                        ))}
                     </div>
-                    <span className="sr-only">{t('hero.imageAlt')}</span>
+                    <p className="mx-auto mt-10 max-w-[600px] px-6 text-center text-[17px] leading-8 sm:text-[19px]">{t('words.lead')}</p>
+                </section>
 
-                    <div className="relative mx-auto max-w-[1200px] px-4 pb-12 pt-10 sm:px-6 lg:flex lg:min-h-[700px] lg:items-center lg:pb-36 lg:pt-16">
-                        <div className="max-w-[560px]">
-                            <p className="flex flex-wrap items-center gap-x-3 text-[12px] font-semibold uppercase tracking-[0.14em] text-[#5d6b62] sm:tracking-[0.22em]">
-                                {list<string>('hero.eyebrow').map((w, i) => (
-                                    <React.Fragment key={w}>{i > 0 && <span aria-hidden="true">•</span>}<span>{w}</span></React.Fragment>
-                                ))}
-                            </p>
-                            <h1 className="mt-5 max-w-[450px] font-display text-[44px] font-medium leading-[1.04] tracking-[-0.02em] sm:text-[56px] lg:text-[62px]" style={display}>
-                                {t('hero.titleA').split(' ').slice(0, -1).join(' ')}{' '}
-                                <span className="whitespace-nowrap">{t('hero.titleA').split(' ').slice(-1)[0]}{' '}<span className="italic text-[#2e5e45]">{t('hero.titleB')}</span></span>
-                            </h1>
-                            <p className={cn('mt-6 max-w-[500px] text-[18px] leading-8', MUTED)}>{t('hero.lead')}</p>
-                            <div className="mt-8 flex flex-wrap items-center gap-3">
-                                <GetStarted label={t('hero.primary')} className="h-[52px] rounded-full px-7 text-[16px]" />
-                                <a href="#how" className="inline-flex h-[52px] items-center gap-2 rounded-full border border-[#cfc6b6] bg-white/70 px-6 text-[16px] font-semibold text-[#1f2a24] backdrop-blur transition-colors hover:border-[#9f9584]">
-                                    {t('hero.secondary')}<Play className="h-3.5 w-3.5 fill-current" aria-hidden="true" />
-                                </a>
+                {/* ── Throwable cards: what the family sees ── */}
+                <section id="privacy" className="relative overflow-hidden py-24 lg:py-32">
+                    <h2 className="hl-heavy px-4 text-center text-[13vw] sm:text-[9vw] lg:text-[7.5rem]">
+                        <span className="block">{t('cards.title')}</span>
+                        <span className="relative inline-block pt-[0.1em]">
+                            <span className="hl-serif text-[#2e5e45]">{t('cards.titleSerif')}</span>
+                            <Scribble className="absolute -bottom-[0.12em] left-0 h-[0.2em] w-full text-[#e8806b]" pathClassName="hl-draw" />
+                        </span>
+                    </h2>
+
+                    <div className="hl-stage relative mx-auto mt-16 h-[360px] max-w-[1120px] px-4 sm:h-[480px] lg:h-[580px]">
+                        <Blob className="absolute left-[2%] top-[4%] w-[46%] opacity-95" fill="#cfe0d4" />
+                        <Sparkle className="absolute right-[6%] top-0 w-12" />
+                        {[
+                            { src: 'hearth/shot-dashboard.webp', cls: 'left-[4%] top-[12%] w-[46%]', rot: -6 },
+                            { src: 'hearth/shot-trust.webp', cls: 'left-[34%] top-[2%] w-[40%]', rot: 4 },
+                            { src: 'hearth/hero-1200.jpg', cls: 'left-[62%] top-[20%] w-[34%]', rot: -3 },
+                        ].map((c, i) => (
+                            <div key={c.src} data-rot={c.rot} className={cn('hl-card absolute cursor-grab overflow-hidden rounded-[14px] border-[6px] border-white bg-white shadow-[0_30px_60px_-24px_rgba(20,35,27,0.55)] sm:rounded-[18px] sm:border-8', c.cls)} style={{ rotate: `${c.rot}deg` }}>
+                                <img src={`${BASE}${c.src}`} alt={list<string>('cards.alts')[i]} loading="lazy" className={cn('block w-full', i === 2 && 'aspect-[4/3] object-cover object-[78%_50%]')} />
                             </div>
-                            <ul className="mt-10 flex flex-wrap gap-x-5 gap-y-3">
-                                {list<string>('hero.points').map((p, i) => {
-                                    const Icon = pointIcons[i] ?? Check;
-                                    return (
-                                        <li key={p} className="flex items-center gap-2.5 whitespace-nowrap text-[14px] font-medium leading-5 text-[#3a453f]">
-                                            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/80 text-[#234a36] shadow-[0_1px_2px_rgba(28,25,20,0.08)]"><Icon className="h-4 w-4" aria-hidden="true" /></span>
-                                            {p}
-                                        </li>
-                                    );
-                                })}
-                            </ul>
-                        </div>
-                    </div>
-
-                    {/* Product previews over the photo (wide screens), labelled as examples */}
-                    <div aria-hidden="true" className="pointer-events-none absolute inset-0 hidden xl:block">
-                        <div className="absolute left-[44%] top-[5%] w-[250px] space-y-2">
-                            <span className="ml-1 inline-block rounded-full bg-white/80 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[#6b6358]">{t('hero.cardExample')}</span>
-                            {list<{ title: string; body: string; time: string }>('hero.cards').map((c, i) => {
-                                const Icon = cardIcons[i];
-                                return (
-                                    <div key={c.title} className="flex items-center gap-3 rounded-[14px] border border-white/60 bg-white/70 px-3.5 py-2 shadow-[0_12px_30px_-14px_rgba(31,42,36,0.45)] backdrop-blur-md">
-                                        <Icon className="h-5 w-5 shrink-0 text-[#234a36]" aria-hidden="true" />
-                                        <span className="min-w-0 flex-1">
-                                            <span className="block text-[13px] font-semibold text-[#1f2a24]">{c.title}</span>
-                                            <span className="block truncate text-[11.5px] text-[#55605a]">{c.body}</span>
-                                            <span className="block text-[11px] text-[#7a847e]">{c.time}</span>
-                                        </span>
-                                        <ChevronRight className="h-4 w-4 text-[#9aa39d]" />
-                                    </div>
-                                );
-                            })}
-                        </div>
-                        <div className="absolute right-[5%] top-[8%] flex w-[250px] items-center gap-3 rounded-[16px] border border-white/50 bg-white/65 px-3.5 py-3 shadow-[0_16px_36px_-16px_rgba(31,42,36,0.5)] backdrop-blur-md">
-                            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#f6e9e1] text-[#b5643d]"><MessageSquareHeart className="h-5 w-5" /></span>
-                            <span className="min-w-0 flex-1 text-[#1f2a24]">
-                                <span className="block text-[13px] font-semibold">{t('hero.message.from')}</span>
-                                <span className="block text-[12px] text-[#55605a]">{t('hero.message.body')}</span>
-                                <span className="flex items-center gap-1 text-[12px] font-medium">{t('hero.message.note')}<Heart className="h-3 w-3 fill-[#d0574a] text-[#d0574a]" /></span>
-                                <span className="block text-[11px] text-[#7a847e]">{t('hero.message.time')}</span>
+                        ))}
+                        {list<string>('cards.labels').map((l, i) => (
+                            <span key={l} data-rot={[-4, 3, -2, 5][i]} style={{ rotate: `${[-4, 3, -2, 5][i]}deg` }}
+                                className={cn('hl-pill absolute z-10 whitespace-nowrap rounded-full px-3.5 py-1.5 text-[12px] font-semibold shadow-lg sm:text-[15px]',
+                                    ['left-[8%] top-[4%] bg-[#f3d9b8]', 'bottom-[14%] left-[40%] bg-[#e8806b]', 'right-[4%] top-[12%] bg-[#cfe0d4]', 'bottom-[2%] right-[10%] bg-white'][i])}>
+                                {l}
                             </span>
-                        </div>
-                        <p className="absolute bottom-[24%] right-[4%] rotate-[-6deg] text-right font-display text-[22px] italic leading-snug text-white [text-shadow:0_2px_12px_rgba(0,0,0,0.45)]" style={display}>
-                            {list<string>('hero.script').map((l) => <span key={l} className="block">{l}</span>)}
-                        </p>
+                        ))}
                     </div>
-
-                    {/* Phones and tablets: the photograph below the text */}
-                    <div className="relative mx-4 mb-10 aspect-[4/3] overflow-hidden rounded-[24px] shadow-[0_24px_48px_-28px_rgba(31,42,36,0.6)] sm:mx-6 lg:hidden">
-                        <HeroPicture position="80% 50%" />
-                    </div>
-
-                    {/* Curved lower edge */}
-                    <svg aria-hidden="true" viewBox="0 0 1440 90" preserveAspectRatio="none" className="absolute bottom-0 left-0 hidden h-[90px] w-full lg:block">
-                        <path d="M0 52 C 360 96, 900 8, 1440 46 L1440 90 L0 90 Z" fill="#f7f4ee" />
-                    </svg>
+                    <p className="mx-auto mt-14 max-w-[620px] px-6 text-center text-[17px] leading-8 sm:text-[19px]">{t('cards.lead')}</p>
                 </section>
 
-                {/* ── Benefits ── */}
-                <section aria-label={t('nav.families')} className="bg-[#f7f4ee] pb-16 lg:pb-20">
-                    <ul className="mx-auto grid max-w-[1200px] gap-8 px-4 sm:grid-cols-2 sm:px-6 lg:grid-cols-4">
-                        {list<Item>('benefits').map((b, i) => {
-                            const Icon = benefitIcons[i];
-                            return (
-                                <li key={b.title} className="flex gap-4">
-                                    <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#e7efe9] text-[#234a36]"><Icon className="h-5 w-5" aria-hidden="true" /></span>
-                                    <span>
-                                        <span className="block text-[16px] font-semibold">{b.title}</span>
-                                        <span className={cn('mt-1 block text-[14px] leading-6', MUTED)}>{b.body}</span>
-                                    </span>
-                                </li>
-                            );
-                        })}
-                    </ul>
-                </section>
-
-                {/* ── How it works: a real sequence, so numbered ── */}
-                <section id="how" className="scroll-mt-24 bg-white py-24 lg:py-32">
-                    <div className="mx-auto max-w-[1200px] px-4 sm:px-6">
-                        <SectionHead title={t('how.title')} lead={t('how.lead')} />
-                        <ol className="relative mt-16 grid gap-12 md:grid-cols-3 md:gap-10">
-                            <span aria-hidden="true" className="absolute left-6 right-[16%] top-6 hidden h-px bg-[#e3dccf] md:block" />
-                            {list<Item>('how.steps').map((s, i) => {
-                                const Icon = stepIcons[i];
-                                return (
-                                    <li key={s.title} className="relative">
-                                        <span className="relative flex h-12 w-12 items-center justify-center rounded-full bg-[#234a36] text-white ring-8 ring-white"><Icon className="h-5 w-5" aria-hidden="true" /></span>
-                                        <p className="mt-6 text-[13px] font-semibold text-[#2e5e45]">Step {i + 1}</p>
-                                        <h3 className="mt-1 text-[20px] font-semibold leading-7">{s.title}</h3>
-                                        <p className={cn('mt-2 max-w-[340px] text-[15px] leading-7', MUTED)}>{s.body}</p>
+                {/* ── The Glimpse Dial, interactive ── */}
+                <section id="parents" className="px-2 sm:px-3">
+                    <div className="mx-auto grid max-w-[1440px] gap-14 rounded-[22px] bg-[#14231b] px-6 py-20 text-white sm:rounded-[28px] sm:px-12 lg:grid-cols-2 lg:gap-20 lg:px-20 lg:py-28">
+                        <div>
+                            <h2 className="hl-heavy text-[15vw] sm:text-[10vw] lg:text-[6.5rem]">
+                                {dialTitle.slice(0, -2).join(' ')}{' '}
+                                <span className="hl-serif text-[#f0b796]">{dialTitle.slice(-2).join(' ')}</span>
+                            </h2>
+                            <p className="mt-6 max-w-[460px] text-[18px] leading-8 text-white/75">{t('dial.lead')}</p>
+                            <ul className="mt-10 space-y-5">
+                                {list<Item>('dial.items').map((it) => (
+                                    <li key={it.title} className="border-t border-white/15 pt-5">
+                                        <p className="text-[18px] font-bold">{it.title}</p>
+                                        <p className="mt-1 text-[15px] leading-7 text-white/70">{it.body}</p>
                                     </li>
-                                );
-                            })}
-                        </ol>
-                    </div>
-                </section>
-
-                {/* ── For families: the real dashboard ── */}
-                <section id="families" className="scroll-mt-24 overflow-hidden bg-[#f7f4ee] py-24 lg:py-32">
-                    <div className="mx-auto grid max-w-[1200px] items-center gap-14 px-4 sm:px-6 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
-                        <div>
-                            <SectionHead title={t('families.title')} lead={t('families.lead')} />
-                            <ul className="mt-10 divide-y divide-[#e6e0d4] border-y border-[#e6e0d4]">
-                                {list<Item>('families.items').map((it, i) => {
-                                    const Icon = familyIcons[i];
-                                    return (
-                                        <li key={it.title} className="flex gap-4 py-5">
-                                            <Icon className="mt-0.5 h-5 w-5 shrink-0 text-[#234a36]" aria-hidden="true" />
-                                            <span>
-                                                <span className="block text-[16px] font-semibold">{it.title}</span>
-                                                <span className={cn('mt-1 block text-[15px] leading-7', MUTED)}>{it.body}</span>
-                                            </span>
-                                        </li>
-                                    );
-                                })}
+                                ))}
                             </ul>
                         </div>
-                        <div className="lg:-mr-24">
-                            <Shot src="shot-dashboard.webp" alt={t('families.shotAlt')} />
-                            <p className={cn('mt-4 text-[13px]', MUTED)}>{t('families.shotNote')}</p>
-                        </div>
-                    </div>
-                </section>
-
-                {/* ── For parents: the Glimpse Dial, interactive ── */}
-                <section id="parents" className="scroll-mt-24 bg-[#1f3a2c] py-24 text-white lg:py-32">
-                    <div className="mx-auto grid max-w-[1200px] gap-14 px-4 sm:px-6 lg:grid-cols-[1fr_1fr] lg:gap-20">
-                        <div>
-                            <SectionHead dark title={t('dial.title')} lead={t('dial.lead')} />
-                            <ul className="mt-10 space-y-6">
-                                {list<Item>('dial.items').map((it, i) => {
-                                    const Icon = parentIcons[i];
-                                    return (
-                                        <li key={it.title} className="flex gap-4">
-                                            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10 text-[#f0b796]"><Icon className="h-5 w-5" aria-hidden="true" /></span>
-                                            <span>
-                                                <span className="block text-[16px] font-semibold">{it.title}</span>
-                                                <span className="mt-1 block text-[15px] leading-7 text-white/70">{it.body}</span>
-                                            </span>
-                                        </li>
-                                    );
-                                })}
-                            </ul>
-                        </div>
-
-                        <div className="rounded-[32px] border border-white/10 bg-white/[0.05] p-6 sm:p-8">
+                        <div className="self-center rounded-[28px] border border-white/10 bg-white/[0.05] p-6 sm:p-8">
                             <div className="flex justify-center"><DialArc level={level} /></div>
-                            <div role="group" aria-label={t('dial.control')} className="mt-2 grid grid-cols-4 gap-1 rounded-full bg-black/20 p-1">
-                                {list<{ name: string; short: string }>('dial.levels').map((l, i) => (
+                            <div role="group" aria-label={t('dial.control')} className="mt-2 grid grid-cols-4 gap-1 rounded-full bg-black/25 p-1">
+                                {list<{ name: string }>('dial.levels').map((l, i) => (
                                     <button key={l.name} type="button" aria-pressed={level === i} onClick={() => setLevel(i)}
-                                        className={cn('h-11 rounded-full text-[14px] font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f0b796]',
-                                            level === i ? 'bg-white text-[#1f3a2c]' : 'text-white/75 hover:text-white')}>
+                                        className={cn('h-11 rounded-full text-[13px] font-bold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f0b796] sm:text-[14px]',
+                                            level === i ? 'bg-white text-[#14231b]' : 'text-white/70 hover:text-white')}>
                                         {l.name}
                                     </button>
                                 ))}
                             </div>
                             <p className="mt-3 text-center text-[13px] text-white/60">{list<{ short: string }>('dial.levels')[level]?.short}</p>
-
-                            <div className="mt-6 rounded-[20px] bg-[#fffdf9] p-5 text-[#1f2a24]" aria-live="polite">
+                            <div className="mt-6 rounded-[20px] bg-[#fffaf2] p-5 text-[#1f2a24]" aria-live="polite">
                                 <div className="flex items-center justify-between">
-                                    <p className="flex items-center gap-2 text-[14px] font-semibold"><Eye className="h-4 w-4 text-[#2e5e45]" aria-hidden="true" />{t('dial.preview')}</p>
-                                    <span className="rounded-full bg-[#f1efea] px-2 py-0.5 text-[11px] font-semibold text-[#6b6358]">{t('dial.example')}</span>
+                                    <p className="flex items-center gap-2 text-[14px] font-bold"><Eye className="h-4 w-4 text-[#2e5e45]" aria-hidden="true" />{t('dial.preview')}</p>
+                                    <span className="rounded-full bg-[#efe9dd] px-2 py-0.5 text-[11px] font-semibold text-[#6b6358]">{t('dial.example')}</span>
                                 </div>
                                 <ul className="mt-3 space-y-2">
                                     {list<{ lines: string[] }>('dial.levels').slice(0, level + 1).flatMap((l, li) => l.lines.map((line) => (
@@ -323,13 +285,12 @@ const Landing: React.FC = () => {
                                     )))}
                                 </ul>
                             </div>
-
                             <div className="mt-4 rounded-[20px] border border-white/10 p-5">
-                                <p className="text-[14px] font-semibold">{t('dial.ledger')}</p>
+                                <p className="text-[14px] font-bold">{t('dial.ledger')}</p>
                                 <ul className="mt-3 space-y-2">
                                     {list<{ who: string; what: string; when: string }>('dial.rows').map((r) => (
                                         <li key={r.who} className="flex items-baseline justify-between gap-4 text-[14px]">
-                                            <span><span className="font-semibold">{r.who}</span> <span className="text-white/70">{r.what}</span></span>
+                                            <span><span className="font-bold">{r.who}</span> <span className="text-white/70">{r.what}</span></span>
                                             <span className="shrink-0 tabular-nums text-white/55">{r.when}</span>
                                         </li>
                                     ))}
@@ -339,121 +300,79 @@ const Landing: React.FC = () => {
                     </div>
                 </section>
 
-                {/* ── Security & privacy ── */}
-                <section id="privacy" className="scroll-mt-24 overflow-hidden bg-white py-24 lg:py-32">
-                    <div className="mx-auto grid max-w-[1200px] items-center gap-14 px-4 sm:px-6 lg:grid-cols-[1.15fr_0.85fr] lg:gap-16">
-                        <div className="order-2 lg:order-1 lg:-ml-24">
-                            <Shot src="shot-trust.webp" alt={t('privacy.shotAlt')} />
-                        </div>
-                        <div className="order-1 lg:order-2">
-                            <SectionHead title={t('privacy.title')} lead={t('privacy.lead')} />
-                            <ul className="mt-8 space-y-3.5">
-                                {list<string>('privacy.facts').map((f) => (
-                                    <li key={f} className="flex gap-3 text-[15px] leading-7 text-[#3a453f]">
-                                        <ShieldCheck className="mt-1 h-4 w-4 shrink-0 text-[#2e5e45]" aria-hidden="true" />{f}
-                                    </li>
+                {/* ── What's inside ── */}
+                <section className="mx-auto max-w-[1440px] px-4 py-24 sm:px-8 lg:py-32">
+                    <h2 className="hl-heavy text-[15vw] sm:text-[10vw] lg:text-[7.5rem]">{t('inside.title')}</h2>
+                    <ul className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                        {list<{ name: string; body: string }>('inside.items').map((it, i) => (
+                            <li key={it.name} className={cn('flex min-h-[240px] flex-col justify-end rounded-[22px] p-7 transition-transform duration-500 [transition-timing-function:cubic-bezier(0.34,1.56,0.64,1)] hover:-rotate-[1.5deg] hover:scale-[1.02]', tiles[i])}>
+                                <span className="block text-[30px] font-extrabold leading-tight tracking-[-0.03em]">{it.name}</span>
+                                <span className="mt-2 block max-w-[340px] text-[15px] leading-7 opacity-85">{it.body}</span>
+                            </li>
+                        ))}
+                    </ul>
+                </section>
+
+                {/* ── Double marquee ── */}
+                <section aria-label={t('works.title')} className="hl-marquee-wrap overflow-hidden py-10">
+                    {(['a', 'b'] as const).map((row) => (
+                        <div key={row} className={cn('py-4', row === 'a' ? '-rotate-2 bg-[#234a36] text-white' : 'rotate-[1.5deg] bg-[#f3d9b8] text-[#1f2a24]')}>
+                            <div className={cn('hl-marquee', row === 'b' && 'hl-marquee--reverse')}>
+                                {[0, 1].map((copy) => (
+                                    <div key={copy} className="flex shrink-0 items-center" aria-hidden={copy === 1}>
+                                        {list<string>(`marquee.${row}`).map((w) => (
+                                            <span key={w} className="flex items-center whitespace-nowrap text-[34px] font-extrabold tracking-[-0.03em] sm:text-[52px]">
+                                                <span className="px-6">{w}</span><Sparkle className="h-7 w-7 shrink-0 sm:h-9 sm:w-9" />
+                                            </span>
+                                        ))}
+                                    </div>
                                 ))}
-                            </ul>
-                        </div>
-                    </div>
-                </section>
-
-                {/* ── Works with ── */}
-                <section className="border-y border-[#e6e0d4] bg-[#f7f4ee] py-20">
-                    <div className="mx-auto max-w-[1200px] px-4 sm:px-6">
-                        <h2 className="font-display text-[28px] font-medium leading-tight sm:text-[32px]" style={display}>{t('works.title')}</h2>
-                        <ul className="mt-10 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
-                            {list<{ name: string; body: string }>('works.items').map((w) => (
-                                <li key={w.name} className="border-t-2 border-[#234a36] pt-4">
-                                    <p className="text-[17px] font-semibold">{w.name}</p>
-                                    <p className={cn('mt-1.5 text-[14px] leading-6', MUTED)}>{w.body}</p>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                </section>
-
-                {/* ── Pricing ── */}
-                <section id="pricing" className="scroll-mt-24 bg-white py-24 lg:py-32">
-                    <div className="mx-auto max-w-[1200px] px-4 sm:px-6">
-                        <SectionHead title={t('pricing.title')} />
-                        <div className="mt-12 grid max-w-[880px] gap-6 md:grid-cols-2">
-                            <div className="rounded-[20px] border-2 border-[#234a36] bg-white p-8">
-                                <h3 className="text-[18px] font-semibold">{t('pricing.self.name')}</h3>
-                                <p className="mt-3 font-display text-[44px] font-medium leading-none" style={display}>{t('pricing.self.price')}</p>
-                                <p className={cn('mt-2 text-[14px]', MUTED)}>{t('pricing.self.note')}</p>
-                                <ul className="mt-6 space-y-2.5">
-                                    {list<string>('pricing.self.features').map((f) => (
-                                        <li key={f} className="flex items-center gap-2.5 text-[15px]"><Check className="h-4 w-4 text-[#2e5e45]" aria-hidden="true" />{f}</li>
-                                    ))}
-                                </ul>
-                                <GetStarted label={t('pricing.self.cta')} className="mt-8 w-full rounded-full" />
-                            </div>
-                            <div className="rounded-[20px] border border-dashed border-[#d6cfc1] bg-[#fbf9f5] p-8">
-                                <h3 className="text-[18px] font-semibold">{t('pricing.hosted.name')}</h3>
-                                <p className="mt-3 font-display text-[30px] font-medium leading-tight text-[#6b6358]" style={display}>{t('pricing.hosted.price')}</p>
-                                <p className={cn('mt-2 text-[14px]', MUTED)}>{t('pricing.hosted.note')}</p>
                             </div>
                         </div>
-                    </div>
+                    ))}
                 </section>
 
                 {/* ── FAQ ── */}
-                <section className="bg-[#f7f4ee] py-24 lg:py-32">
-                    <div className="mx-auto grid max-w-[1200px] gap-12 px-4 sm:px-6 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
-                        <SectionHead title={t('faq.title')} />
-                        <div className="divide-y divide-[#e6e0d4] border-y border-[#e6e0d4]">
-                            {list<{ q: string; a: string }>('faq.items').map((f) => (
-                                <details key={f.q} className="group py-5">
-                                    <summary className="flex cursor-pointer list-none items-center justify-between gap-6 text-[17px] font-semibold focus:outline-none focus-visible:underline [&::-webkit-details-marker]:hidden">
-                                        {f.q}
-                                        <Plus className="h-5 w-5 shrink-0 text-[#2e5e45] transition-transform group-open:rotate-45 motion-reduce:transition-none" aria-hidden="true" />
-                                    </summary>
-                                    <p className={cn('mt-3 max-w-[620px] text-[15px] leading-7', MUTED)}>{f.a}</p>
-                                </details>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-
-                {/* ── Final call to action ── */}
-                <section className="bg-[#f7f4ee] px-4 pb-24 sm:px-6">
-                    <div className="relative isolate mx-auto max-w-[1200px] overflow-hidden rounded-[32px] bg-[#1d3328] px-6 py-16 text-white sm:px-14 sm:py-20">
-                        <HeroPicture position="70% 40%" className="opacity-40" />
-                        <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-r from-[#14231b]/95 via-[#14231b]/75 to-[#14231b]/30" />
-                        <div className="relative z-10 max-w-[520px]">
-                            <h2 className="font-display text-[34px] font-medium leading-tight sm:text-[44px]" style={display}>{t('cta.title')}</h2>
-                            <p className="mt-4 text-[17px] leading-7 text-white/80">{t('cta.body')}</p>
-                            <Link to="/login" className="mt-8 inline-flex h-[52px] items-center gap-2 rounded-full bg-white px-7 text-[16px] font-semibold text-[#1f3a2c] transition-colors hover:bg-[#f1efe7] focus:outline-none focus-visible:ring-4 focus-visible:ring-white/40">
-                                {t('cta.button')}<ArrowRight className="h-4 w-4" aria-hidden="true" />
-                            </Link>
-                        </div>
+                <section id="faq" className="mx-auto grid max-w-[1440px] gap-12 px-4 py-24 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:py-32">
+                    <h2 className="hl-heavy text-[13vw] sm:text-[8vw] lg:text-[6rem]">{t('faq.title')}</h2>
+                    <div className="divide-y divide-[#ddd5c6] border-y border-[#ddd5c6]">
+                        {list<{ q: string; a: string }>('faq.items').map((f) => (
+                            <details key={f.q} className="group py-6">
+                                <summary className="flex cursor-pointer list-none items-center justify-between gap-6 text-[19px] font-bold tracking-[-0.01em] focus:outline-none focus-visible:underline [&::-webkit-details-marker]:hidden">
+                                    {f.q}
+                                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#234a36] text-white transition-transform duration-300 group-open:rotate-45 motion-reduce:transition-none"><Plus className="h-4 w-4" aria-hidden="true" /></span>
+                                </summary>
+                                <p className="mt-3 max-w-[620px] text-[16px] leading-7 text-[#4a554e]">{f.a}</p>
+                            </details>
+                        ))}
                     </div>
                 </section>
             </main>
 
-            <footer className="border-t border-[#e6e0d4] bg-[#f7f4ee]">
-                <div className="mx-auto grid max-w-[1200px] gap-10 px-4 py-14 sm:px-6 md:grid-cols-[1.4fr_1fr_1fr]">
-                    <div>
-                        <HearthLogo />
-                        <p className={cn('mt-3 text-[14px]', MUTED)}>{t('footer.tagline')}</p>
-                        <p className={cn('mt-6 max-w-[380px] text-[13px] leading-6', MUTED)}>{t('footer.disclaimer')}</p>
+            {/* ── Footer: dark block ── */}
+            <footer className="px-2 pb-2 sm:px-3 sm:pb-3">
+                <div className="relative overflow-hidden rounded-[22px] bg-[#14231b] px-6 pb-6 pt-16 text-white sm:rounded-[28px] sm:px-12 lg:px-20">
+                    <div className="grid gap-12 md:grid-cols-3">
+                        <div>
+                            <span className="inline-block rounded-full bg-white px-3.5 py-1.5 text-[14px] font-semibold text-[#14231b]">{t('foot.openLabel')}</span>
+                            <a href="https://github.com/Aaditya1273/Hearth" target="_blank" rel="noopener noreferrer" className="mt-4 flex items-center gap-2 text-[28px] font-extrabold tracking-[-0.03em] hover:text-[#f0b796]">
+                                {t('foot.openTitle')}<ArrowUpRight className="h-6 w-6" aria-hidden="true" />
+                            </a>
+                            <a href="https://github.com/NexaFlowFrance/OpenCare" target="_blank" rel="noopener noreferrer" className="mt-3 block text-[14px] text-white/60 underline-offset-2 hover:underline">{t('foot.attribution')}</a>
+                        </div>
+                        <div>
+                            <span className="inline-block rounded-full bg-white px-3.5 py-1.5 text-[14px] font-semibold text-[#14231b]">{t('foot.tryLabel')}</span>
+                            <Link to="/login" className="mt-4 flex items-center gap-2 text-[28px] font-extrabold tracking-[-0.03em] hover:text-[#f0b796]">{t('foot.tryTitle')}<ArrowRight className="h-6 w-6" aria-hidden="true" /></Link>
+                            {DEMO_LOGIN && <p className="mt-3 font-mono text-[13px] text-white/75">{DEMO_LOGIN}</p>}
+                            <p className="mt-2 text-[14px] text-white/60">{t('foot.tryNote')}</p>
+                        </div>
+                        <div>
+                            <span className="inline-block rounded-full bg-white px-3.5 py-1.5 text-[14px] font-semibold text-[#14231b]">{t('foot.honestLabel')}</span>
+                            <p className="mt-4 text-[28px] font-extrabold leading-tight tracking-[-0.03em]">{t('foot.honestTitle')}</p>
+                            <p className="mt-3 text-[14px] text-white/60">{t('foot.honestNote')}</p>
+                        </div>
                     </div>
-                    <nav aria-label={t('footer.product')}>
-                        <p className="text-[14px] font-semibold">{t('footer.product')}</p>
-                        <ul className="mt-3 space-y-2">
-                            {NAV.slice(1).map((n) => (
-                                <li key={n.key}><a href={n.href} className={cn('text-[14px] hover:text-[#234a36]', MUTED)}>{t(`nav.${n.key}`)}</a></li>
-                            ))}
-                        </ul>
-                    </nav>
-                    <div>
-                        <p className="text-[14px] font-semibold">{t('footer.project')}</p>
-                        <ul className="mt-3 space-y-2 text-[14px]">
-                            <li><a href="https://github.com/Aaditya1273/Hearth" target="_blank" rel="noopener noreferrer" className={cn('hover:text-[#234a36]', MUTED)}>{t('footer.source')}</a></li>
-                            <li><a href="https://github.com/NexaFlowFrance/OpenCare" target="_blank" rel="noopener noreferrer" className={cn('hover:text-[#234a36]', MUTED)}>{t('footer.attribution')}</a></li>
-                        </ul>
-                    </div>
+                    <p aria-hidden="true" className="hl-heavy mt-16 select-none text-center text-[27vw] leading-[0.8] text-white/[0.07]">hearth</p>
                 </div>
             </footer>
         </div>
