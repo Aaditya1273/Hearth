@@ -21,6 +21,7 @@ This repository is a working app (Express + PostgreSQL + React), not a mockup. E
 | Parent kiosk: large targets, sharing dial, delegate, "I'm away", honest help button | Working | `client/src/components/app/KioskHearth.tsx` |
 | **Alexa+ track**: self-hosted MCP server, Streamable HTTP, protocol 2025-11-25, scoped tokens, policy-filtered answers, human confirmation by MCP elicitation | Working, protocol-tested with the official MCP SDK client | `server/src/routes/mcp.ts` |
 | **AWS: Ask Hearth** on Amazon Bedrock (Nova 2 Lite, Converse API with tool use). Tools read through the same sharing policy, have no write access, and every read is in the Trust Ledger; public weather (Open-Meteo) is the only outside lookup | Working, tested with a scripted Bedrock client. **Live calls blocked until AWS finishes verifying our account**; meanwhile it returns a labelled basic answer. See [docs/AWS.md](docs/AWS.md) | `server/src/lib/hearth/askHearth.ts` |
+| **Ring front door** through the Ring Partner API: event history (works with the Ring Developer Playground) and HMAC-verified webhooks for person motion and contact sensors. No video, pictures or live view; vehicles, deliveries and the doorbell button are ignored | Working, tested with a scripted Ring API and signed webhooks. Playground events are marked simulated. Account linking for the Ring Appstore is not built. See [docs/RING.md](docs/RING.md) | `server/src/lib/hearth/ring.ts` |
 | Presence events from Home Assistant (webhook, idempotent `event_id`) | Working (existing OpenCare feature, extended) | `POST /api/presence/webhook/...` |
 | Deterministic simulator and demo seed | Working, tested; demo circles only; every event flagged simulated | `npm run demo:seed` |
 | Connection to the live Alexa+ service | **Not done**: needs Amazon developer access. The MCP server has only been exercised by the SDK client in tests | |
@@ -56,6 +57,7 @@ Secrets live only in `.env` (git-ignored). Hearth adds two optional settings to 
 - `HEARTH_SIMULATOR_ENABLED=true` allows the simulator and `demo:seed` when `NODE_ENV=production` (off by default).
 - `POSTGRES_POOL_MAX` caps the database pool; set it to `1` with PGlite.
 - `HEARTH_BEDROCK_MODEL_ID` (for example `global.amazon.nova-2-lite-v1:0`) and `HEARTH_BEDROCK_REGION` turn on Ask Hearth; credentials come from the standard AWS chain. See [docs/AWS.md](docs/AWS.md).
+- `RING_HMAC_SIGNING_KEY` turns on the signed Ring webhook. Importing from Ring needs no setting: an admin pastes a token on the Sharing & trust page. See [docs/RING.md](docs/RING.md).
 
 Alexa+ tokens are created per member in the app (Sharing and trust), shown once and stored hashed.
 

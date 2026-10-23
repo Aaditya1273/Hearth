@@ -1,0 +1,47 @@
+{
+    "name": "@opencare/server",
+    "version": "1.2.2",
+    "description": "OpenCare backend server",
+    "main": "dist/index.js",
+    "scripts": {
+        "dev": "tsx watch src/index.ts",
+        "build": "tsc",
+        "start": "node dist/index.js",
+        "demo:seed": "LOG_LEVEL=warn tsx src/scripts/seedDemo.ts"
+    },
+    "dependencies": {
+        "@anthropic-ai/sdk": "^0.135.0",
+        "@aws-sdk/client-bedrock-runtime": "^3.1155.0",
+        "@modelcontextprotocol/sdk": "^1.32.1",
+        "bcrypt": "^6.0.0",
+        "cors": "^2.8.5",
+        "date-fns": "^3.0.6",
+        "dotenv": "^16.3.1",
+        "express": "^4.22.3",
+        "express-rate-limit": "^8.7.1",
+        "helmet": "^8.3.0",
+        "jsonwebtoken": "^9.0.2",
+        "node-cron": "^4.6.0",
+        "nodemailer": "^10.1.2",
+        "pg": "^8.23.1",
+        "qs": "^6.16.1",
+        "undici": "^8.12.2",
+        "web-push": "^3.6.6",
+        "ws": "^8.22.0",
+        "zod": "^3.25.76"
+    },
+    "devDependencies": {
+        "@types/bcrypt": "^5.0.2",
+        "@types/cors": "^2.8.17",
+        "@types/express": "^4.17.21",
+        "@types/jsonwebtoken": "^9.0.5",
+        "@types/node": "^20.19.43",
+        "@types/node-cron": "^3.0.11",
+        "@types/nodemailer": "^8.0.2",
+        "@types/pg": "^8.23.1",
+        "@types/web-push": "^3.6.3",
+        "@types/ws": "^8.18.2",
+        "tsx": "^4.23.13",
+        "typescript": "^5.3.3"
+    }
+}

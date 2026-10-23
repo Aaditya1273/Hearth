@@ -1,0 +1,89 @@
+{
+  "greeting": "How is {{name}} doing?",
+  "greetingFallback": "Hello",
+  "seeAll": "See all",
+  "household": {
+    "label": "Same household:",
+    "viewAll": "The household",
+    "current": "Currently shown",
+    "nextEvent": "At {{time}}: {{title}}",
+    "eventsDone": "{{count}} appointments today",
+    "noEvent": "Nothing planned today",
+    "meds": "{{taken}}/{{total}} medications taken",
+    "medsNone": "No medication today",
+    "lastNews": "Latest update {{when}} ({{author}})",
+    "noNews": "No note yet",
+    "open": "Open"
+  },
+  "unreadMessages_one": "{{count}} unread message",
+  "unreadMessages_other": "{{count}} unread messages",
+  "today": {
+    "title": "Today",
+    "empty": "Nothing planned today. A quiet day."
+  },
+  "categories": {
+    "visit": "Visit",
+    "medical": "Medical",
+    "nurse": "Nurse",
+    "aide": "Care aide",
+    "other": "Other"
+  },
+  "medications": {
+    "title": "Today's medications",
+    "takenCount": "{{taken}}/{{total}} doses confirmed",
+    "next": "Next doses",
+    "allDone": "All of today's doses are behind us.",
+    "empty": "No doses scheduled today."
+  },
+  "journal": {
+    "title": "Latest news",
+    "empty": "No news yet. Visits and notes from the circle will appear here."
+  },
+  "tasks": {
+    "title": "Pending tasks",
+    "count_one": "{{count}} pending task",
+    "count_other": "{{count}} pending tasks",
+    "empty": "All done. Nothing pending."
+  },
+  "vitals": {
+    "title": "Vitals",
+    "empty": "No measurements yet.",
+    "types": {
+      "weight": "Weight",
+      "bp": "Blood pressure",
+      "temperature": "Temperature",
+      "glucose": "Glucose",
+      "pain": "Pain",
+      "mood": "Mood"
+    }
+  },
+  "errors": {
+    "load": "Unable to load the dashboard."
+  },
+  "attention": {
+    "title": "Needs attention",
+    "empty": "Nothing needs attention right now. All is in order.",
+    "help_one": "{{count}} alert signal in the last 24 h",
+    "help_other": "{{count}} alert signals in the last 24 h",
+    "presence": "No sensor activity yet (usually by {{time}})",
+    "presenceDetail": "This may be a routine change or a sensor issue. Consider giving a call.",
+    "missed_intakes_one": "{{count}} missed dose today",
+    "missed_intakes_other": "{{count}} missed doses today",
+    "prescriptions_one": "{{count}} prescription to renew",
+    "prescriptions_other": "{{count}} prescriptions to renew",
+    "tasks_overdue_one": "{{count}} overdue task",
+    "tasks_overdue_other": "{{count}} overdue tasks",
+    "visitor_present": "{{name}} has been here since {{time}}",
+    "appointments": "Soon: {{title}} at {{time}}",
+    "acknowledge": "I am on it",
+    "helpOpen_one": "{{count}} request not taken in charge yet",
+    "helpOpen_other": "{{count}} requests not taken in charge yet",
+    "vitals_out_of_range_one": "{{count}} measurement out of range",
+    "vitals_out_of_range_other": "{{count}} measurements out of range",
+    "medication_stock_one": "{{count}} medication running out",
+    "medication_stock_other": "{{count}} medications running out",
+    "stockLeft_one": "{{name}} ({{count}} left)",
+    "stockLeft_other": "{{name}} ({{count}} left)"
+  },
+  "openKiosk": "Kiosk mode"
+}

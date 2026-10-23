@@ -1,0 +1,33 @@
+{
+  "title": "Demandez-moi",
+  "subtitle": "Appuie sur le micro et pose ta question, ou discute un moment.",
+  "close": "Fermer",
+  "you": "Toi",
+  "companion": "Compagnon",
+  "mic": {
+    "idle": "Appuie pour parler",
+    "recording": "Je t'écoute, appuie pour terminer",
+    "thinking": "Un instant...",
+    "denied": "Le micro n'est pas accessible. Tu peux écrire ci-dessous.",
+    "unavailable": "La dictée n'est pas disponible ici. Tu peux écrire ci-dessous."
+  },
+  "textPlaceholder": "Écris ici si tu préfères",
+  "send": "Envoyer",
+  "replay": "Réécouter",
+  "starters": [
+    "Bonjour, comment vas-tu aujourd'hui ?",
+    "Raconte-moi un beau souvenir.",
+    "Parle-moi de ma journée."
+  ],
+  "openingLine": "Bonjour {{name}}, je t'écoute. Que veux-tu savoir ?",
+  "openingLineNoName": "Bonjour, je t'écoute. Que veux-tu savoir ?",
+  "error": "Désolé, je n'ai pas réussi à répondre. On réessaie ?",
+  "subtitleFacts": "Appuie sur le micro et pose ta question.",
+  "quick": {
+    "meds": "Qu'est-ce que je dois prendre ?",
+    "visitors": "Qui vient aujourd'hui ?",
+    "appointments": "Mes rendez-vous ?",
+    "date": "Quel jour sommes-nous ?",
+    "call": "Qui puis-je appeler ?"
+  }
+}

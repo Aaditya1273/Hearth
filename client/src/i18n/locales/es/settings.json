@@ -1,0 +1,135 @@
+{
+  "title": "Ajustes",
+  "subtitle": "Su cuenta, sus preferencias y los datos del círculo.",
+  "profile": {
+    "title": "Perfil de la cuenta",
+    "subtitle": "Su nombre y su foto, visibles para los miembros de sus círculos.",
+    "name": "Nombre mostrado",
+    "namePlaceholder": "Ej.: Juan Pérez",
+    "save": "Guardar",
+    "saved": "Perfil guardado.",
+    "change": "Cambiar la foto",
+    "choose": "Elegir una foto",
+    "remove": "Quitar"
+  },
+  "language": {
+    "title": "Idioma",
+    "subtitle": "Elija el idioma de la interfaz de la aplicación."
+  },
+  "region": {
+    "title": "Idioma y región",
+    "subtitle": "Cómo Hearth habla, mide y cuenta la semana.",
+    "forYou": "Solo para usted",
+    "forCircle": "Para todo el círculo"
+  },
+  "theme": {
+    "title": "Tema",
+    "subtitle": "Claro, oscuro o ajustado automáticamente según su dispositivo.",
+    "light": "Claro",
+    "dark": "Oscuro",
+    "system": "Sistema"
+  },
+  "notif": {
+    "title": "Notificaciones push",
+    "subtitle": "Reciba los recordatorios y avisos del círculo directamente en este dispositivo, incluso con la aplicación cerrada.",
+    "unsupported": "Notificaciones no compatibles con este navegador.",
+    "denied": "Permiso denegado. Autorice las notificaciones en los ajustes de su navegador.",
+    "enable": "Activar las notificaciones",
+    "disable": "Desactivar las notificaciones",
+    "inProgress": "En curso…",
+    "active": "Notificaciones activadas en este dispositivo."
+  },
+  "export": {
+    "title": "Exportar los datos del círculo",
+    "subtitle": "Descarga todos los datos del círculo activo (diario, salud, medicamentos, agenda, tareas, gastos, documentos…) en un archivo JSON. Sus datos se quedan con usted.",
+    "button": "Exportar",
+    "inProgress": "Exportación en curso…"
+  },
+  "import": {
+    "title": "Importar datos",
+    "subtitle": "Restaura los datos de un archivo de exportación de Hearth en el círculo activo. Los elementos importados se suman a los datos existentes.",
+    "success": "Importación realizada",
+    "itemsImported_one": "elemento importado",
+    "itemsImported_other": "elementos importados",
+    "chooseFile": "Elegir un archivo…",
+    "button": "Importar",
+    "inProgress": "Importación en curso…",
+    "invalidJson": "Archivo JSON no válido."
+  },
+  "entities": {
+    "care_recipients": "Perfil del familiar",
+    "recipient_stories": "Página « Quién soy »",
+    "journal_entries": "Entradas del diario",
+    "journal_photos": "Fotos del diario",
+    "vitals": "Constantes",
+    "medications": "Medicamentos",
+    "medication_schedules": "Horarios de toma",
+    "medication_intakes": "Tomas de medicamentos",
+    "prescriptions": "Recetas",
+    "events": "Citas",
+    "tasks": "Tareas",
+    "shopping_items": "Artículos de la compra",
+    "circle_notes": "Notas",
+    "messages": "Mensajes",
+    "documents": "Documentos",
+    "contacts": "Contactos",
+    "expenses": "Gastos",
+    "expense_settlements": "Reembolsos",
+    "aid_records": "Ayudas recibidas"
+  },
+  "errors": {
+    "notif": "Error al configurar las notificaciones.",
+    "profile": "Error al actualizar el perfil.",
+    "avatarImage": "Elija una imagen.",
+    "avatarRead": "No se ha podido leer el archivo.",
+    "avatarInvalid": "Imagen no válida.",
+    "avatarCanvas": "Canvas no disponible.",
+    "avatarUpdate": "Error al actualizar la foto.",
+    "avatarRemove": "Error al eliminar la foto.",
+    "export": "Error durante la exportación.",
+    "import": "Error durante la importación."
+  },
+  "units": {
+    "title": "Unidades",
+    "subtitle": "Cómo se introducen y se muestran las constantes de este círculo.",
+    "metric": "Métrico",
+    "imperial": "Imperial",
+    "weight": "Peso en",
+    "temperature": "Temperatura en",
+    "glucose": "Glucemia en",
+    "hint": "Las mediciones se guardan siempre en métrico: cambiar de sistema convierte todo el historial en pantalla, no se pierde nada. La tensión se queda en mmHg en ambos casos.",
+    "error": "No se han podido guardar las unidades."
+  },
+  "weekStart": {
+    "title": "La semana empieza el",
+    "subtitle": "Primera columna del calendario y primer día en la elección de días.",
+    "monday": "Lunes",
+    "sunday": "Domingo",
+    "error": "No se ha podido guardar el primer día de la semana."
+  },
+  "emergencyNumbers": {
+    "title": "Números de emergencia",
+    "subtitle": "Se imprimen en el cartel de la ficha de emergencia. Indique los números del país donde vive su ser querido.",
+    "placeholder": "p. ej. 112",
+    "save": "Guardar",
+    "saving": "Guardando",
+    "saved": "Guardado. Vuelva a imprimir el cartel para actualizarlo.",
+    "error": "No se han podido guardar los números de emergencia."
+  },
+  "aidTypes": {
+    "title": "Tipos de ayuda",
+    "subtitle": "Se proponen en Gastos, Ayudas. Adapte la lista a las ayudas del país donde vive su ser querido.",
+    "placeholder": "p. ej. Ley de Dependencia",
+    "newLabel": "Nuevo tipo de ayuda",
+    "add": "Añadir",
+    "remove": "Quitar {{type}}",
+    "save": "Guardar",
+    "saving": "Guardando",
+    "saved": "Guardado. Las ayudas ya registradas conservan su tipo.",
+    "reset": "Volver a la lista por defecto",
+    "empty": "Añada al menos un tipo antes de guardar.",
+    "duplicate": "Ese tipo ya está en la lista.",
+    "tooMany": "{{max}} tipos como máximo.",
+    "error": "No se han podido guardar los tipos de ayuda."
+  }
+}

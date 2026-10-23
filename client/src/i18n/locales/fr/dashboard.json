@@ -1,0 +1,89 @@
+{
+  "greeting": "Comment va {{name}} ?",
+  "greetingFallback": "Bonjour",
+  "seeAll": "Voir tout",
+  "household": {
+    "label": "Même foyer :",
+    "viewAll": "Le foyer",
+    "current": "Proche affiché",
+    "nextEvent": "À {{time}} : {{title}}",
+    "eventsDone": "{{count}} rendez-vous aujourd'hui",
+    "noEvent": "Rien de prévu aujourd'hui",
+    "meds": "{{taken}}/{{total}} médicaments pris",
+    "medsNone": "Pas de médicament aujourd'hui",
+    "lastNews": "Dernière nouvelle {{when}} ({{author}})",
+    "noNews": "Pas encore de note",
+    "open": "Ouvrir"
+  },
+  "unreadMessages_one": "{{count}} message non lu",
+  "unreadMessages_other": "{{count}} messages non lus",
+  "today": {
+    "title": "Aujourd'hui",
+    "empty": "Rien de prévu aujourd'hui. Une journée tranquille."
+  },
+  "categories": {
+    "visit": "Visite",
+    "medical": "Médical",
+    "nurse": "Infirmière",
+    "aide": "Auxiliaire",
+    "other": "Autre"
+  },
+  "medications": {
+    "title": "Médicaments du jour",
+    "takenCount": "{{taken}}/{{total}} prises confirmées",
+    "next": "Prochaines prises",
+    "allDone": "Toutes les prises du jour sont passées.",
+    "empty": "Aucune prise prévue aujourd'hui."
+  },
+  "journal": {
+    "title": "Dernières nouvelles",
+    "empty": "Pas encore de nouvelles. Les passages et les notes du cercle apparaîtront ici."
+  },
+  "tasks": {
+    "title": "Tâches en attente",
+    "count_one": "{{count}} tâche en attente",
+    "count_other": "{{count}} tâches en attente",
+    "empty": "Tout est fait. Rien en attente."
+  },
+  "vitals": {
+    "title": "Constantes",
+    "empty": "Aucune mesure pour le moment.",
+    "types": {
+      "weight": "Poids",
+      "bp": "Tension",
+      "temperature": "Température",
+      "glucose": "Glycémie",
+      "pain": "Douleur",
+      "mood": "Moral"
+    }
+  },
+  "errors": {
+    "load": "Impossible de charger le tableau de bord."
+  },
+  "attention": {
+    "title": "À traiter",
+    "empty": "Rien à traiter pour le moment. Tout est en ordre.",
+    "help_one": "{{count}} signal d'alerte dans les dernières 24 h",
+    "help_other": "{{count}} signaux d'alerte dans les dernières 24 h",
+    "presence": "Pas encore d’activité des capteurs (habituellement avant {{time}})",
+    "presenceDetail": "Ce peut être un changement de routine ou un souci de capteur. Pensez à appeler.",
+    "missed_intakes_one": "{{count}} prise manquée aujourd'hui",
+    "missed_intakes_other": "{{count}} prises manquées aujourd'hui",
+    "prescriptions_one": "{{count}} ordonnance à renouveler",
+    "prescriptions_other": "{{count}} ordonnances à renouveler",
+    "tasks_overdue_one": "{{count}} tâche en retard",
+    "tasks_overdue_other": "{{count}} tâches en retard",
+    "visitor_present": "{{name}} est sur place depuis {{time}}",
+    "appointments": "Bientôt : {{title}} à {{time}}",
+    "acknowledge": "Je m'en occupe",
+    "helpOpen_one": "{{count}} demande sans prise en charge",
+    "helpOpen_other": "{{count}} demandes sans prise en charge",
+    "vitals_out_of_range_one": "{{count}} mesure hors de la plage",
+    "vitals_out_of_range_other": "{{count}} mesures hors de la plage",
+    "medication_stock_one": "{{count}} médicament bientôt épuisé",
+    "medication_stock_other": "{{count}} médicaments bientôt épuisés",
+    "stockLeft_one": "{{name}} ({{count}} restant)",
+    "stockLeft_other": "{{name}} ({{count}} restants)"
+  },
+  "openKiosk": "Mode Kiosk"
+}
