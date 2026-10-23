@@ -372,7 +372,11 @@ const Landing: React.FC = () => {
                             <p className="mt-3 text-[14px] text-white/60">{t('foot.honestNote')}</p>
                         </div>
                     </div>
-                    <p aria-hidden="true" className="hl-heavy mt-16 select-none text-center text-[27vw] leading-[0.8] text-white/[0.07]">hearth</p>
+                    {/* Wordmark: an SVG text fitted to the width, so it is one line at every size. */}
+                    <svg aria-hidden="true" viewBox="0 0 1000 205" className="mt-16 block w-full select-none">
+                        <text x="500" y="182" textAnchor="middle" textLength="990" lengthAdjust="spacingAndGlyphs" fill="rgba(255,255,255,0.07)"
+                            style={{ fontFamily: 'Epilogue, sans-serif', fontWeight: 900, fontSize: 250 }}>hearth</text>
+                    </svg>
                 </div>
             </footer>
         </div>
