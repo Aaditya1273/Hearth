@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import {
-    ArrowRight, ShieldCheck, Menu, X, PlugZap, Sprout, BellRing, Sparkles, Route, MessageSquareHeart, Mic,
-    SlidersHorizontal, ScrollText, Plane, MonitorSmartphone, Check, Play, ChevronRight, Heart, Sun, DoorOpen, Leaf, Lock, Users, Home, CalendarCheck,
+    ArrowRight, ShieldCheck, Menu, X, PlugZap, Sprout, BellRing, Sparkles, Route, MessageSquareHeart, MessagesSquare, Mic,
+    Plane, UserCheck, MonitorSmartphone, Check, Play, ChevronRight, Heart, Sun, DoorOpen, Leaf, Lock, Users, Home, CalendarCheck, Plus, Eye,
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import HearthLogo from '../components/app/HearthLogo';
@@ -30,13 +30,45 @@ const NAV = [
 
 type Item = { title: string; body: string };
 
-const SectionHead: React.FC<{ eyebrow: string; title: string; lead?: string; center?: boolean }> = ({ eyebrow, title, lead, center }) => (
-    <div className={cn('max-w-2xl', center && 'mx-auto text-center')}>
-        <p className="text-caption font-semibold uppercase tracking-[0.14em] text-[#b5643d]">{eyebrow}</p>
-        <h2 className={cn('mt-3 font-display text-[32px] font-medium leading-[1.1] sm:text-[42px]', INK)} style={display}>{title}</h2>
-        {lead && <p className={cn('mt-4 text-[17px] leading-7', MUTED)}>{lead}</p>}
+/** Section heading: one size for every section, left-aligned. */
+const SectionHead: React.FC<{ title: string; lead?: string; dark?: boolean; className?: string }> = ({ title, lead, dark, className }) => (
+    <div className={cn('max-w-[620px]', className)}>
+        <h2 className={cn('font-display text-[34px] font-medium leading-[1.08] tracking-[-0.015em] sm:text-[44px]', dark ? 'text-white' : INK)} style={display}>{title}</h2>
+        {lead && <p className={cn('mt-4 text-[17px] leading-7', dark ? 'text-white/75' : MUTED)}>{lead}</p>}
     </div>
 );
+
+/** A product screenshot in a quiet window frame. */
+const Shot: React.FC<{ src: string; alt: string; className?: string }> = ({ src, alt, className }) => (
+    <figure className={cn('overflow-hidden rounded-[24px] border border-[#e3dccf] bg-white shadow-[0_40px_80px_-40px_rgba(31,42,36,0.45)]', className)}>
+        <div className="flex h-9 items-center gap-1.5 border-b border-[#eee8dd] bg-[#fbf9f5] px-4" aria-hidden="true">
+            <span className="h-2.5 w-2.5 rounded-full bg-[#e4ddd0]" /><span className="h-2.5 w-2.5 rounded-full bg-[#e4ddd0]" /><span className="h-2.5 w-2.5 rounded-full bg-[#e4ddd0]" />
+        </div>
+        <img src={`${import.meta.env.BASE_URL}hearth/${src}`} alt={alt} loading="lazy" decoding="async" className="block w-full" width={1152} height={836} />
+    </figure>
+);
+
+/** The Glimpse Dial drawn as a half-circle gauge; the buttons below it are the real control. */
+const DialArc: React.FC<{ level: number }> = ({ level }) => {
+    const cx = 160, cy = 150, r = 120;
+    const pt = (deg: number) => [cx + r * Math.cos((deg * Math.PI) / 180), cy - r * Math.sin((deg * Math.PI) / 180)];
+    const arc = (i: number) => {
+        const [x1, y1] = pt(180 - 45 * i - 3); const [x2, y2] = pt(180 - 45 * (i + 1) + 3);
+        return `M ${x1} ${y1} A ${r} ${r} 0 0 1 ${x2} ${y2}`;
+    };
+    const needle = 180 - 45 * level - 22.5;
+    const [nx, ny] = [cx + 92 * Math.cos((needle * Math.PI) / 180), cy - 92 * Math.sin((needle * Math.PI) / 180)];
+    return (
+        <svg viewBox="0 0 320 170" className="w-full max-w-[340px]" aria-hidden="true">
+            {[0, 1, 2, 3].map((i) => (
+                <path key={i} d={arc(i)} fill="none" strokeWidth={22} strokeLinecap="round"
+                    stroke={i <= level ? `rgba(232,160,122,${0.45 + i * 0.18})` : 'rgba(255,255,255,0.10)'} className="transition-[stroke] duration-300" />
+            ))}
+            <line x1={cx} y1={cy} x2={nx} y2={ny} stroke="#fff" strokeWidth={4} strokeLinecap="round" className="transition-all duration-300 motion-reduce:transition-none" />
+            <circle cx={cx} cy={cy} r={10} fill="#fff" />
+        </svg>
+    );
+};
 
 const GetStarted: React.FC<{ label: string; className?: string }> = ({ label, className }) => (
     <Link to="/login" className={cn('inline-flex h-12 items-center justify-center gap-2 rounded-[10px] bg-[#234a36] px-6 text-[15px] font-semibold text-white shadow-[0_6px_18px_-8px_rgba(35,74,54,0.7)] transition-colors hover:bg-[#1c3c2c] focus:outline-none focus-visible:ring-4 focus-visible:ring-[#234a36]/30', className)}>
@@ -49,8 +81,9 @@ const Landing: React.FC = () => {
     const { t } = useTranslation('landing');
     const [menuOpen, setMenuOpen] = useState(false);
     const list = <T,>(key: string) => t(key, { returnObjects: true }) as unknown as T[];
-    const familyIcons = [Sparkles, Route, MessageSquareHeart, Mic];
-    const parentIcons = [SlidersHorizontal, ScrollText, Plane, MonitorSmartphone];
+    const [level, setLevel] = useState(1);
+    const familyIcons = [Sparkles, Route, MessageSquareHeart, MessagesSquare];
+    const parentIcons = [Plane, UserCheck, MonitorSmartphone];
     const stepIcons = [PlugZap, Sprout, BellRing];
     const pointIcons = [Leaf, Lock, Users];
     const cardIcons = [Sun, DoorOpen, Mic];
@@ -100,7 +133,7 @@ const Landing: React.FC = () => {
                     </div>
                     <span className="sr-only">{t('hero.imageAlt')}</span>
 
-                    <div className="relative mx-auto max-w-[1280px] px-4 pb-12 pt-10 sm:px-6 lg:flex lg:min-h-[700px] lg:items-center lg:pb-36 lg:pt-16">
+                    <div className="relative mx-auto max-w-[1200px] px-4 pb-12 pt-10 sm:px-6 lg:flex lg:min-h-[700px] lg:items-center lg:pb-36 lg:pt-16">
                         <div className="max-w-[560px]">
                             <p className="flex flex-wrap items-center gap-x-3 text-[12px] font-semibold uppercase tracking-[0.14em] text-[#5d6b62] sm:tracking-[0.22em]">
                                 {list<string>('hero.eyebrow').map((w, i) => (
@@ -178,7 +211,7 @@ const Landing: React.FC = () => {
 
                 {/* ── Benefits ── */}
                 <section aria-label={t('nav.families')} className="bg-[#f7f4ee] pb-16 lg:pb-20">
-                    <ul className="mx-auto grid max-w-[1280px] gap-8 px-4 sm:grid-cols-2 sm:px-6 lg:grid-cols-4">
+                    <ul className="mx-auto grid max-w-[1200px] gap-8 px-4 sm:grid-cols-2 sm:px-6 lg:grid-cols-4">
                         {list<Item>('benefits').map((b, i) => {
                             const Icon = benefitIcons[i];
                             return (
@@ -194,21 +227,20 @@ const Landing: React.FC = () => {
                     </ul>
                 </section>
 
-                {/* ── How it works ── */}
-                <section id="how" className="scroll-mt-24 border-t border-[#e9e3d7] bg-white py-20 lg:py-28">
+                {/* ── How it works: a real sequence, so numbered ── */}
+                <section id="how" className="scroll-mt-24 bg-white py-24 lg:py-32">
                     <div className="mx-auto max-w-[1200px] px-4 sm:px-6">
-                        <SectionHead eyebrow={t('how.eyebrow')} title={t('how.title')} center />
-                        <ol className="mt-14 grid gap-6 md:grid-cols-3">
+                        <SectionHead title={t('how.title')} lead={t('how.lead')} />
+                        <ol className="relative mt-16 grid gap-12 md:grid-cols-3 md:gap-10">
+                            <span aria-hidden="true" className="absolute left-6 right-[16%] top-6 hidden h-px bg-[#e3dccf] md:block" />
                             {list<Item>('how.steps').map((s, i) => {
                                 const Icon = stepIcons[i];
                                 return (
-                                    <li key={s.title} className="rounded-[20px] border border-[#ece6da] bg-[#fbf9f5] p-7">
-                                        <div className="flex items-center justify-between">
-                                            <span className="flex h-12 w-12 items-center justify-center rounded-[14px] bg-[#234a36] text-white"><Icon className="h-6 w-6" aria-hidden="true" /></span>
-                                            <span className="font-display text-[40px] font-medium leading-none text-[#e0d8c9]" style={display}>{i + 1}</span>
-                                        </div>
-                                        <h3 className="mt-6 text-[19px] font-semibold">{s.title}</h3>
-                                        <p className={cn('mt-2 text-[15px] leading-7', MUTED)}>{s.body}</p>
+                                    <li key={s.title} className="relative">
+                                        <span className="relative flex h-12 w-12 items-center justify-center rounded-full bg-[#234a36] text-white ring-8 ring-white"><Icon className="h-5 w-5" aria-hidden="true" /></span>
+                                        <p className="mt-6 text-[13px] font-semibold text-[#2e5e45]">Step {i + 1}</p>
+                                        <h3 className="mt-1 text-[20px] font-semibold leading-7">{s.title}</h3>
+                                        <p className={cn('mt-2 max-w-[340px] text-[15px] leading-7', MUTED)}>{s.body}</p>
                                     </li>
                                 );
                             })}
@@ -216,62 +248,137 @@ const Landing: React.FC = () => {
                     </div>
                 </section>
 
-                {/* ── For families / for parents ── */}
-                {([['families', familyIcons, 'bg-[#f7f4ee]'], ['parents', parentIcons, 'bg-white']] as const).map(([key, icons, bg]) => (
-                    <section key={key} id={key} className={cn('scroll-mt-24 py-20 lg:py-28', bg)}>
-                        <div className="mx-auto grid max-w-[1200px] gap-12 px-4 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
-                            <SectionHead eyebrow={t(`${key}.eyebrow`)} title={t(`${key}.title`)} />
-                            <ul className="grid gap-5 sm:grid-cols-2">
-                                {list<Item>(`${key}.items`).map((it, i) => {
-                                    const Icon = icons[i];
+                {/* ── For families: the real dashboard ── */}
+                <section id="families" className="scroll-mt-24 overflow-hidden bg-[#f7f4ee] py-24 lg:py-32">
+                    <div className="mx-auto grid max-w-[1200px] items-center gap-14 px-4 sm:px-6 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
+                        <div>
+                            <SectionHead title={t('families.title')} lead={t('families.lead')} />
+                            <ul className="mt-10 divide-y divide-[#e6e0d4] border-y border-[#e6e0d4]">
+                                {list<Item>('families.items').map((it, i) => {
+                                    const Icon = familyIcons[i];
                                     return (
-                                        <li key={it.title} className="rounded-[18px] border border-[#ece6da] bg-white p-6 shadow-[0_1px_2px_rgba(28,25,20,0.04)]">
-                                            <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#f6e9e1] text-[#b5643d]"><Icon className="h-5 w-5" aria-hidden="true" /></span>
-                                            <h3 className="mt-4 text-[17px] font-semibold">{it.title}</h3>
-                                            <p className={cn('mt-1.5 text-[15px] leading-7', MUTED)}>{it.body}</p>
+                                        <li key={it.title} className="flex gap-4 py-5">
+                                            <Icon className="mt-0.5 h-5 w-5 shrink-0 text-[#234a36]" aria-hidden="true" />
+                                            <span>
+                                                <span className="block text-[16px] font-semibold">{it.title}</span>
+                                                <span className={cn('mt-1 block text-[15px] leading-7', MUTED)}>{it.body}</span>
+                                            </span>
                                         </li>
                                     );
                                 })}
                             </ul>
                         </div>
-                    </section>
-                ))}
+                        <div className="lg:-mr-24">
+                            <Shot src="shot-dashboard.webp" alt={t('families.shotAlt')} />
+                            <p className={cn('mt-4 text-[13px]', MUTED)}>{t('families.shotNote')}</p>
+                        </div>
+                    </div>
+                </section>
+
+                {/* ── For parents: the Glimpse Dial, interactive ── */}
+                <section id="parents" className="scroll-mt-24 bg-[#1f3a2c] py-24 text-white lg:py-32">
+                    <div className="mx-auto grid max-w-[1200px] gap-14 px-4 sm:px-6 lg:grid-cols-[1fr_1fr] lg:gap-20">
+                        <div>
+                            <SectionHead dark title={t('dial.title')} lead={t('dial.lead')} />
+                            <ul className="mt-10 space-y-6">
+                                {list<Item>('dial.items').map((it, i) => {
+                                    const Icon = parentIcons[i];
+                                    return (
+                                        <li key={it.title} className="flex gap-4">
+                                            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10 text-[#f0b796]"><Icon className="h-5 w-5" aria-hidden="true" /></span>
+                                            <span>
+                                                <span className="block text-[16px] font-semibold">{it.title}</span>
+                                                <span className="mt-1 block text-[15px] leading-7 text-white/70">{it.body}</span>
+                                            </span>
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                        </div>
+
+                        <div className="rounded-[32px] border border-white/10 bg-white/[0.05] p-6 sm:p-8">
+                            <div className="flex justify-center"><DialArc level={level} /></div>
+                            <div role="group" aria-label={t('dial.control')} className="mt-2 grid grid-cols-4 gap-1 rounded-full bg-black/20 p-1">
+                                {list<{ name: string; short: string }>('dial.levels').map((l, i) => (
+                                    <button key={l.name} type="button" aria-pressed={level === i} onClick={() => setLevel(i)}
+                                        className={cn('h-11 rounded-full text-[14px] font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f0b796]',
+                                            level === i ? 'bg-white text-[#1f3a2c]' : 'text-white/75 hover:text-white')}>
+                                        {l.name}
+                                    </button>
+                                ))}
+                            </div>
+                            <p className="mt-3 text-center text-[13px] text-white/60">{list<{ short: string }>('dial.levels')[level]?.short}</p>
+
+                            <div className="mt-6 rounded-[20px] bg-[#fffdf9] p-5 text-[#1f2a24]" aria-live="polite">
+                                <div className="flex items-center justify-between">
+                                    <p className="flex items-center gap-2 text-[14px] font-semibold"><Eye className="h-4 w-4 text-[#2e5e45]" aria-hidden="true" />{t('dial.preview')}</p>
+                                    <span className="rounded-full bg-[#f1efea] px-2 py-0.5 text-[11px] font-semibold text-[#6b6358]">{t('dial.example')}</span>
+                                </div>
+                                <ul className="mt-3 space-y-2">
+                                    {list<{ lines: string[] }>('dial.levels').slice(0, level + 1).flatMap((l, li) => l.lines.map((line) => (
+                                        <li key={line} className="flex items-start gap-2.5 text-[15px] leading-6">
+                                            {li === 0 ? <Check className="mt-1 h-4 w-4 shrink-0 text-[#2f7a4d]" aria-hidden="true" /> : <Plus className="mt-1 h-4 w-4 shrink-0 text-[#b5643d]" aria-hidden="true" />}
+                                            {line}
+                                        </li>
+                                    )))}
+                                </ul>
+                            </div>
+
+                            <div className="mt-4 rounded-[20px] border border-white/10 p-5">
+                                <p className="text-[14px] font-semibold">{t('dial.ledger')}</p>
+                                <ul className="mt-3 space-y-2">
+                                    {list<{ who: string; what: string; when: string }>('dial.rows').map((r) => (
+                                        <li key={r.who} className="flex items-baseline justify-between gap-4 text-[14px]">
+                                            <span><span className="font-semibold">{r.who}</span> <span className="text-white/70">{r.what}</span></span>
+                                            <span className="shrink-0 tabular-nums text-white/55">{r.when}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
 
                 {/* ── Security & privacy ── */}
-                <section id="privacy" className="scroll-mt-24 bg-[#1f3a2c] py-20 text-white lg:py-28">
-                    <div className="mx-auto grid max-w-[1200px] gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:gap-16">
-                        <div>
-                            <p className="text-caption font-semibold uppercase tracking-[0.14em] text-[#e8a07a]">{t('privacy.eyebrow')}</p>
-                            <h2 className="mt-3 font-display text-[32px] font-medium leading-[1.1] sm:text-[42px]" style={display}>{t('privacy.title')}</h2>
-                            <p className="mt-4 text-[17px] leading-7 text-white/80">{t('privacy.lead')}</p>
+                <section id="privacy" className="scroll-mt-24 overflow-hidden bg-white py-24 lg:py-32">
+                    <div className="mx-auto grid max-w-[1200px] items-center gap-14 px-4 sm:px-6 lg:grid-cols-[1.15fr_0.85fr] lg:gap-16">
+                        <div className="order-2 lg:order-1 lg:-ml-24">
+                            <Shot src="shot-trust.webp" alt={t('privacy.shotAlt')} />
+                        </div>
+                        <div className="order-1 lg:order-2">
+                            <SectionHead title={t('privacy.title')} lead={t('privacy.lead')} />
                             <ul className="mt-8 space-y-3.5">
                                 {list<string>('privacy.facts').map((f) => (
-                                    <li key={f} className="flex gap-3 text-[15px] leading-7 text-white/90">
-                                        <Check className="mt-1 h-4 w-4 shrink-0 text-[#e8a07a]" aria-hidden="true" />{f}
+                                    <li key={f} className="flex gap-3 text-[15px] leading-7 text-[#3a453f]">
+                                        <ShieldCheck className="mt-1 h-4 w-4 shrink-0 text-[#2e5e45]" aria-hidden="true" />{f}
                                     </li>
                                 ))}
                             </ul>
                         </div>
-                        <ol className="space-y-3 self-center" aria-label="Glimpse Dial">
-                            {list<Item & { name: string }>('privacy.levels').map((l, i) => (
-                                <li key={l.name} className="flex items-center gap-4 rounded-[16px] border border-white/12 bg-white/[0.06] p-4">
-                                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full font-display text-[18px] font-medium" style={{ background: `rgba(232,160,122,${0.18 + i * 0.18})` }}>{i + 1}</span>
-                                    <span>
-                                        <span className="block text-[17px] font-semibold">{l.name}</span>
-                                        <span className="block text-[14px] text-white/70">{l.body}</span>
-                                    </span>
+                    </div>
+                </section>
+
+                {/* ── Works with ── */}
+                <section className="border-y border-[#e6e0d4] bg-[#f7f4ee] py-20">
+                    <div className="mx-auto max-w-[1200px] px-4 sm:px-6">
+                        <h2 className="font-display text-[28px] font-medium leading-tight sm:text-[32px]" style={display}>{t('works.title')}</h2>
+                        <ul className="mt-10 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
+                            {list<{ name: string; body: string }>('works.items').map((w) => (
+                                <li key={w.name} className="border-t-2 border-[#234a36] pt-4">
+                                    <p className="text-[17px] font-semibold">{w.name}</p>
+                                    <p className={cn('mt-1.5 text-[14px] leading-6', MUTED)}>{w.body}</p>
                                 </li>
                             ))}
-                        </ol>
+                        </ul>
                     </div>
                 </section>
 
                 {/* ── Pricing ── */}
-                <section id="pricing" className="scroll-mt-24 bg-[#f7f4ee] py-20 lg:py-28">
+                <section id="pricing" className="scroll-mt-24 bg-white py-24 lg:py-32">
                     <div className="mx-auto max-w-[1200px] px-4 sm:px-6">
-                        <SectionHead eyebrow={t('pricing.eyebrow')} title={t('pricing.title')} center />
-                        <div className="mx-auto mt-14 grid max-w-4xl gap-6 md:grid-cols-2">
-                            <div className="rounded-[22px] border-2 border-[#234a36] bg-white p-8">
+                        <SectionHead title={t('pricing.title')} />
+                        <div className="mt-12 grid max-w-[880px] gap-6 md:grid-cols-2">
+                            <div className="rounded-[20px] border-2 border-[#234a36] bg-white p-8">
                                 <h3 className="text-[18px] font-semibold">{t('pricing.self.name')}</h3>
                                 <p className="mt-3 font-display text-[44px] font-medium leading-none" style={display}>{t('pricing.self.price')}</p>
                                 <p className={cn('mt-2 text-[14px]', MUTED)}>{t('pricing.self.note')}</p>
@@ -280,9 +387,9 @@ const Landing: React.FC = () => {
                                         <li key={f} className="flex items-center gap-2.5 text-[15px]"><Check className="h-4 w-4 text-[#2e5e45]" aria-hidden="true" />{f}</li>
                                     ))}
                                 </ul>
-                                <GetStarted label={t('pricing.self.cta')} className="mt-8 w-full" />
+                                <GetStarted label={t('pricing.self.cta')} className="mt-8 w-full rounded-full" />
                             </div>
-                            <div className="rounded-[22px] border border-dashed border-[#d6cfc1] bg-[#fbf9f5] p-8">
+                            <div className="rounded-[20px] border border-dashed border-[#d6cfc1] bg-[#fbf9f5] p-8">
                                 <h3 className="text-[18px] font-semibold">{t('pricing.hosted.name')}</h3>
                                 <p className="mt-3 font-display text-[30px] font-medium leading-tight text-[#6b6358]" style={display}>{t('pricing.hosted.price')}</p>
                                 <p className={cn('mt-2 text-[14px]', MUTED)}>{t('pricing.hosted.note')}</p>
@@ -291,15 +398,33 @@ const Landing: React.FC = () => {
                     </div>
                 </section>
 
+                {/* ── FAQ ── */}
+                <section className="bg-[#f7f4ee] py-24 lg:py-32">
+                    <div className="mx-auto grid max-w-[1200px] gap-12 px-4 sm:px-6 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
+                        <SectionHead title={t('faq.title')} />
+                        <div className="divide-y divide-[#e6e0d4] border-y border-[#e6e0d4]">
+                            {list<{ q: string; a: string }>('faq.items').map((f) => (
+                                <details key={f.q} className="group py-5">
+                                    <summary className="flex cursor-pointer list-none items-center justify-between gap-6 text-[17px] font-semibold focus:outline-none focus-visible:underline [&::-webkit-details-marker]:hidden">
+                                        {f.q}
+                                        <Plus className="h-5 w-5 shrink-0 text-[#2e5e45] transition-transform group-open:rotate-45 motion-reduce:transition-none" aria-hidden="true" />
+                                    </summary>
+                                    <p className={cn('mt-3 max-w-[620px] text-[15px] leading-7', MUTED)}>{f.a}</p>
+                                </details>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
                 {/* ── Final call to action ── */}
-                <section className="px-4 pb-20 sm:px-6">
-                    <div className="relative isolate mx-auto max-w-[1200px] overflow-hidden rounded-[28px] bg-[#1d3328] px-6 py-14 text-center text-white sm:px-12">
-                        <HeroPicture position="60% 40%" className="opacity-35" />
-                        <div aria-hidden="true" className="absolute inset-0 bg-[#14231b]/60" />
-                        <div className="relative z-10 mx-auto max-w-xl">
-                            <h2 className="font-display text-[32px] font-medium leading-tight sm:text-[40px]" style={display}>{t('cta.title')}</h2>
-                            <p className="mt-3 text-[17px] text-white/85">{t('cta.body')}</p>
-                            <Link to="/login" className="mt-8 inline-flex h-[52px] items-center gap-2 rounded-[10px] bg-white px-7 text-[16px] font-semibold text-[#1f3a2c] transition-colors hover:bg-[#f1efe7]">
+                <section className="bg-[#f7f4ee] px-4 pb-24 sm:px-6">
+                    <div className="relative isolate mx-auto max-w-[1200px] overflow-hidden rounded-[32px] bg-[#1d3328] px-6 py-16 text-white sm:px-14 sm:py-20">
+                        <HeroPicture position="70% 40%" className="opacity-40" />
+                        <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-r from-[#14231b]/95 via-[#14231b]/75 to-[#14231b]/30" />
+                        <div className="relative z-10 max-w-[520px]">
+                            <h2 className="font-display text-[34px] font-medium leading-tight sm:text-[44px]" style={display}>{t('cta.title')}</h2>
+                            <p className="mt-4 text-[17px] leading-7 text-white/80">{t('cta.body')}</p>
+                            <Link to="/login" className="mt-8 inline-flex h-[52px] items-center gap-2 rounded-full bg-white px-7 text-[16px] font-semibold text-[#1f3a2c] transition-colors hover:bg-[#f1efe7] focus:outline-none focus-visible:ring-4 focus-visible:ring-white/40">
                                 {t('cta.button')}<ArrowRight className="h-4 w-4" aria-hidden="true" />
                             </Link>
                         </div>
@@ -308,16 +433,26 @@ const Landing: React.FC = () => {
             </main>
 
             <footer className="border-t border-[#e6e0d4] bg-[#f7f4ee]">
-                <div className="mx-auto flex max-w-[1200px] flex-col gap-6 px-4 py-10 sm:px-6 md:flex-row md:items-start md:justify-between">
+                <div className="mx-auto grid max-w-[1200px] gap-10 px-4 py-14 sm:px-6 md:grid-cols-[1.4fr_1fr_1fr]">
                     <div>
                         <HearthLogo />
                         <p className={cn('mt-3 text-[14px]', MUTED)}>{t('footer.tagline')}</p>
+                        <p className={cn('mt-6 max-w-[380px] text-[13px] leading-6', MUTED)}>{t('footer.disclaimer')}</p>
                     </div>
-                    <div className={cn('max-w-md space-y-2 text-[13px] leading-6', MUTED)}>
-                        <p>
-                            <a href="https://github.com/NexaFlowFrance/OpenCare" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-[#234a36]">{t('footer.attribution')}</a>
-                        </p>
-                        <p>{t('footer.disclaimer')}</p>
+                    <nav aria-label={t('footer.product')}>
+                        <p className="text-[14px] font-semibold">{t('footer.product')}</p>
+                        <ul className="mt-3 space-y-2">
+                            {NAV.slice(1).map((n) => (
+                                <li key={n.key}><a href={n.href} className={cn('text-[14px] hover:text-[#234a36]', MUTED)}>{t(`nav.${n.key}`)}</a></li>
+                            ))}
+                        </ul>
+                    </nav>
+                    <div>
+                        <p className="text-[14px] font-semibold">{t('footer.project')}</p>
+                        <ul className="mt-3 space-y-2 text-[14px]">
+                            <li><a href="https://github.com/Aaditya1273/Hearth" target="_blank" rel="noopener noreferrer" className={cn('hover:text-[#234a36]', MUTED)}>{t('footer.source')}</a></li>
+                            <li><a href="https://github.com/NexaFlowFrance/OpenCare" target="_blank" rel="noopener noreferrer" className={cn('hover:text-[#234a36]', MUTED)}>{t('footer.attribution')}</a></li>
+                        </ul>
                     </div>
                 </div>
             </footer>

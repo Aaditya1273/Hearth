@@ -58,99 +58,170 @@
     ],
     "imageAlt": "An older woman smiling in her living room while her family waves from a video call on the TV"
   },
+  "benefits": [
+    {
+      "title": "Daily reassurance",
+      "body": "A simple daily signal that your loved one is doing well."
+    },
+    {
+      "title": "Less coordination stress",
+      "body": "Visits, errands and tasks organised in one place."
+    },
+    {
+      "title": "More meaningful connection",
+      "body": "Send messages and short videos to your parent's Hearth screen."
+    },
+    {
+      "title": "Built for privacy",
+      "body": "No video, ever. Your parent chooses what to share."
+    }
+  ],
   "how": {
-    "eyebrow": "How it works",
-    "title": "A quiet signal, not a camera.",
+    "title": "From an ordinary morning to a calm answer.",
+    "lead": "Hearth reads the small signals a home already gives off and turns them into one status the whole family can trust.",
     "steps": [
       {
         "title": "Connect what is already there",
-        "body": "Door, motion and appliance sensors through Home Assistant, plus a check-in button on the parent's Hearth screen. Nothing new to wear."
+        "body": "A Ring doorbell, door and motion sensors through Home Assistant, and a check-in button on the parent's Hearth screen. Nothing new to wear."
       },
       {
         "title": "Hearth learns the routine",
-        "body": "After seven days it knows a usual morning. Until then it says \"not enough data\" instead of guessing."
+        "body": "After seven active days it knows what a usual morning looks like. Until then it says “not enough data” instead of guessing."
       },
       {
-        "title": "The family gets a calm daily status",
-        "body": "Normal, worth a look, or no signal, always with how Hearth knows and one suggested next step."
+        "title": "The family gets one calm status",
+        "body": "A normal day, worth a look, or no signal yet. Always with how Hearth knows and one proportionate next step."
       }
     ]
   },
   "families": {
-    "eyebrow": "For families",
-    "title": "Less worry, fewer group-chat threads.",
+    "title": "Less worry. Fewer group-chat threads.",
+    "lead": "One place for the whole family to see how Mom is doing, who is visiting, and what needs doing.",
     "items": [
       {
         "title": "Why Cards",
-        "body": "When a morning is quieter than usual you get what was observed, the usual pattern, the evidence and one proportionate step, like a call."
+        "body": "When a morning is quieter than usual, you see what was observed, her usual pattern, and one sensible step, like a call."
       },
       {
         "title": "Piggyback Planner",
-        "body": "Visiting Saturday? Hearth suggests the errand that fits your trip. Nothing is assigned until you say yes."
+        "body": "Visiting Saturday? Hearth suggests the errand that fits your trip. Nothing is assigned until someone says yes."
       },
       {
         "title": "Moments",
-        "body": "Send a short message or video that appears on your parent's Hearth screen, and see when it was seen."
+        "body": "Send a short message or video to her Hearth screen and see when it was seen."
       },
       {
-        "title": "Ask with Alexa+",
-        "body": "A Hearth MCP connector answers \"how is Mom doing?\" with exactly what she shares. Live Alexa+ connection is still in testing."
+        "title": "Ask Hearth",
+        "body": "Type “How is Mom doing today?” and get a plain answer from Amazon Bedrock, limited to what she shares."
       }
-    ]
+    ],
+    "shotAlt": "The Hearth family dashboard: today's status, how Hearth knows, upcoming visits and family responsibilities",
+    "shotNote": "The family dashboard, with the simulated demo data labelled as such."
   },
-  "parents": {
-    "eyebrow": "For parents",
-    "title": "Your home, your rules.",
+  "dial": {
+    "title": "Mom decides what you see.",
+    "lead": "She picks a level on her own screen. Family members cannot raise it, not even an admin. Try it.",
+    "control": "Sharing level",
+    "preview": "What the family sees",
+    "example": "Example",
+    "levels": [
+      {
+        "name": "Light",
+        "short": "Status only",
+        "lines": [
+          "Margaret is having a normal day."
+        ]
+      },
+      {
+        "name": "Rhythm",
+        "short": "+ timings",
+        "lines": [
+          "Day started at 7:42, within her usual window.",
+          "Last activity at 10:24."
+        ]
+      },
+      {
+        "name": "Glimpse",
+        "short": "+ short event notes",
+        "lines": [
+          "7:42 Bedroom: movement",
+          "8:05 Kitchen: movement",
+          "9:12 Front door: opened"
+        ]
+      },
+      {
+        "name": "Recovery",
+        "short": "+ chosen extras, for a set time",
+        "lines": [
+          "Morning medication confirmed at 9:00.",
+          "Slept through the night.",
+          "Ends by itself on Sunday."
+        ]
+      }
+    ],
+    "ledger": "And she sees who looked",
+    "rows": [
+      {
+        "who": "Sam",
+        "what": "viewed today's status",
+        "when": "10:02"
+      },
+      {
+        "who": "Alex via Alexa+",
+        "what": "asked how Mom is doing",
+        "when": "9:30"
+      }
+    ],
     "items": [
       {
-        "title": "Choose what the family sees",
-        "body": "Four simple levels, from a status only to more detail for a few days after a hospital stay. It goes back by itself."
-      },
-      {
-        "title": "See who looked",
-        "body": "The Trust Ledger lists every time someone viewed your information and every change, in plain words."
-      },
-      {
         "title": "I'm away",
-        "body": "Visiting your sister? One tap and nobody worries about a quiet house."
+        "body": "Visiting her sister? One tap, and nobody worries about a quiet house."
       },
       {
-        "title": "Big, calm screen",
+        "title": "A delegate she trusts",
+        "body": "She can name one person to change her level for her. Nobody else can."
+      },
+      {
+        "title": "A big, calm screen",
         "body": "Large buttons, readable type, messages from family, and an honest help button."
       }
     ]
   },
   "privacy": {
-    "eyebrow": "Security & Privacy",
-    "title": "The parent's choice is enforced on the server.",
-    "lead": "The Glimpse Dial is not a hidden panel in an app. Every answer, in the family app or through Alexa+, is built from the fields the parent allows, and every disclosure is recorded.",
-    "levels": [
-      {
-        "name": "Light",
-        "body": "Status only"
-      },
-      {
-        "name": "Rhythm",
-        "body": "+ timings"
-      },
-      {
-        "name": "Glimpse",
-        "body": "+ short event notes"
-      },
-      {
-        "name": "Recovery",
-        "body": "+ chosen extras, for a few days"
-      }
-    ],
+    "title": "Privacy that is enforced, not just promised.",
+    "lead": "Every answer, in the app, on Alexa+ or from Ask Hearth, is built on the server from the fields she allows. Then it is written down.",
     "facts": [
-      "Family members cannot raise the level. Only the parent, or a delegate the parent names.",
-      "No facial recognition, no live video, no guessing who someone is.",
-      "Every view and every change is written to the Trust Ledger.",
+      "No video, pictures or live view. From Ring, Hearth keeps only “motion at the door” and “a door opened”.",
+      "No facial recognition and no guessing who someone is.",
+      "Vehicles, deliveries and doorbell presses are ignored. A visitor is not her routine.",
+      "Every view and every change is written to the Trust Ledger she can read.",
+      "Simulated data is always labelled, everywhere it appears.",
       "Hearth is not a medical device or an emergency service."
+    ],
+    "shotAlt": "The Sharing and trust page: the four sharing levels and the Trust Ledger listing every view"
+  },
+  "works": {
+    "title": "Works with what is already in the home.",
+    "items": [
+      {
+        "name": "Ring",
+        "body": "Front-door motion and door sensors through the Ring Partner API. Signed webhooks, no video."
+      },
+      {
+        "name": "Alexa+",
+        "body": "Ask “How is Mom?” by voice through Hearth's MCP connector. Live Alexa+ connection is still in testing."
+      },
+      {
+        "name": "Amazon Bedrock",
+        "body": "Ask Hearth answers in plain words with Amazon Nova. It can read, never act."
+      },
+      {
+        "name": "Home Assistant",
+        "body": "Door, motion and appliance sensors you may already have."
+      }
     ]
   },
   "pricing": {
-    "eyebrow": "Pricing",
     "title": "Free and open source.",
     "self": {
       "name": "Self-hosted",
@@ -170,6 +241,31 @@
       "note": "We will host it for you. No date has been set."
     }
   },
+  "faq": {
+    "title": "Questions families ask",
+    "items": [
+      {
+        "q": "Is Hearth a camera?",
+        "a": "No. Hearth never asks for video, pictures or live view. It uses simple signals like “motion at the front door” or “the kitchen sensor moved”, with a time."
+      },
+      {
+        "q": "What if there is not enough data yet?",
+        "a": "Hearth says “not enough data”. It needs seven active days in the last two weeks before it calls anything normal, and a silent sensor is shown as a data problem, not an emergency."
+      },
+      {
+        "q": "Is this a medical alert system?",
+        "a": "No. Hearth is not a medical device or an emergency service. In an emergency, call your local emergency number."
+      },
+      {
+        "q": "Who can change what the family sees?",
+        "a": "Only the parent, from their Hearth screen, or one delegate they name. Every change, including refused attempts, is written to the Trust Ledger."
+      },
+      {
+        "q": "Can we run it ourselves?",
+        "a": "Yes. Hearth is open source under AGPL-3.0, and runs on your own server or a home computer."
+      }
+    ]
+  },
   "cta": {
     "title": "Start with one normal day.",
     "body": "Create your family circle, pair your parent's screen, and let them choose what to share.",
@@ -177,25 +273,10 @@
   },
   "footer": {
     "tagline": "Family presence for aging parents.",
+    "product": "Product",
+    "project": "Project",
+    "source": "Source code",
     "attribution": "Built on OpenCare by NexaFlow, licensed AGPL-3.0.",
     "disclaimer": "Hearth is not a medical device or an emergency service. In an emergency, call your local emergency number."
-  },
-  "benefits": [
-    {
-      "title": "Daily reassurance",
-      "body": "A simple daily signal that your loved one is doing well."
-    },
-    {
-      "title": "Less coordination stress",
-      "body": "Visits, errands and tasks organised in one place."
-    },
-    {
-      "title": "More meaningful connection",
-      "body": "Send messages and short videos to your parent's Hearth screen."
-    },
-    {
-      "title": "Built for privacy",
-      "body": "No video, ever. Your parent chooses what to share."
-    }
-  ]
+  }
 }
