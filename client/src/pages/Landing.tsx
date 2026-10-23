@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import {
-    ArrowRight, CameraOff, ShieldCheck, Github, Menu, X, PlugZap, Sprout, BellRing, Sparkles, Route, MessageSquareHeart, Mic,
-    SlidersHorizontal, ScrollText, Plane, MonitorSmartphone, Check, CheckCircle2,
+    ArrowRight, ShieldCheck, Menu, X, PlugZap, Sprout, BellRing, Sparkles, Route, MessageSquareHeart, Mic,
+    SlidersHorizontal, ScrollText, Plane, MonitorSmartphone, Check, Play, ChevronRight, Heart, Sun, DoorOpen, Leaf, Lock, Users, Home, CalendarCheck,
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import HearthLogo from '../components/app/HearthLogo';
@@ -39,7 +39,7 @@ const SectionHead: React.FC<{ eyebrow: string; title: string; lead?: string; cen
 );
 
 const GetStarted: React.FC<{ label: string; className?: string }> = ({ label, className }) => (
-    <Link to="/login?mode=register" className={cn('inline-flex h-12 items-center justify-center gap-2 rounded-[10px] bg-[#234a36] px-6 text-[15px] font-semibold text-white shadow-[0_6px_18px_-8px_rgba(35,74,54,0.7)] transition-colors hover:bg-[#1c3c2c] focus:outline-none focus-visible:ring-4 focus-visible:ring-[#234a36]/30', className)}>
+    <Link to="/login" className={cn('inline-flex h-12 items-center justify-center gap-2 rounded-[10px] bg-[#234a36] px-6 text-[15px] font-semibold text-white shadow-[0_6px_18px_-8px_rgba(35,74,54,0.7)] transition-colors hover:bg-[#1c3c2c] focus:outline-none focus-visible:ring-4 focus-visible:ring-[#234a36]/30', className)}>
         {label}
         <ArrowRight className="h-4 w-4" aria-hidden="true" />
     </Link>
@@ -52,7 +52,9 @@ const Landing: React.FC = () => {
     const familyIcons = [Sparkles, Route, MessageSquareHeart, Mic];
     const parentIcons = [SlidersHorizontal, ScrollText, Plane, MonitorSmartphone];
     const stepIcons = [PlugZap, Sprout, BellRing];
-    const pointIcons = [CameraOff, ShieldCheck, Github];
+    const pointIcons = [Leaf, Lock, Users];
+    const cardIcons = [Sun, DoorOpen, Mic];
+    const benefitIcons = [Home, CalendarCheck, Users, ShieldCheck];
 
     return (
         <div id="top" className={cn('min-h-screen bg-[#f7f4ee] font-sans antialiased', INK)}>
@@ -90,54 +92,106 @@ const Landing: React.FC = () => {
             </header>
 
             <main>
-                {/* ── Hero ── */}
-                <section className="mx-auto grid max-w-[1200px] items-center gap-10 px-4 pb-16 pt-10 sm:px-6 lg:grid-cols-[1fr_1.08fr] lg:gap-14 lg:pb-24 lg:pt-16">
-                    <div>
-                        <p className="inline-flex items-center gap-2 rounded-full border border-[#e3d9c8] bg-white/70 px-3.5 py-1.5 text-[13px] font-medium text-[#6b5a45]">
-                            <span className="h-1.5 w-1.5 rounded-full bg-[#c0673f]" aria-hidden="true" />{t('hero.eyebrow')}
-                        </p>
-                        <h1 className="mt-6 font-display text-[42px] font-medium leading-[1.04] tracking-[-0.015em] sm:text-[56px] lg:text-[64px]" style={display}>
-                            {t('hero.titleA')}{' '}
-                            <span className="italic text-[#2e5e45]">{t('hero.titleB')}</span>
-                        </h1>
-                        <p className={cn('mt-6 max-w-xl text-[18px] leading-8', MUTED)}>{t('hero.lead')}</p>
-                        <div className="mt-8 flex flex-wrap items-center gap-3">
-                            <GetStarted label={t('hero.primary')} className="h-[52px] px-7 text-[16px]" />
-                            <a href="#how" className="inline-flex h-[52px] items-center rounded-[10px] border border-[#d9d2c4] bg-white px-6 text-[16px] font-semibold text-[#1f2a24] transition-colors hover:border-[#b9b0a0]">{t('hero.secondary')}</a>
+                {/* ── Hero: full-bleed photograph, cream fade on the reading side ── */}
+                <section className="relative isolate overflow-hidden bg-[#f7f4ee]">
+                    <div className="absolute inset-0 hidden lg:block">
+                        <HeroPicture position="78% 50%" />
+                        <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(90deg,#f7f4ee_0%,#f7f4ee_24%,rgba(247,244,238,0.82)_34%,rgba(247,244,238,0.2)_46%,rgba(247,244,238,0)_54%)]" />
+                    </div>
+                    <span className="sr-only">{t('hero.imageAlt')}</span>
+
+                    <div className="relative mx-auto max-w-[1280px] px-4 pb-12 pt-10 sm:px-6 lg:flex lg:min-h-[700px] lg:items-center lg:pb-36 lg:pt-16">
+                        <div className="max-w-[560px]">
+                            <p className="flex flex-wrap items-center gap-x-3 text-[12px] font-semibold uppercase tracking-[0.14em] text-[#5d6b62] sm:tracking-[0.22em]">
+                                {list<string>('hero.eyebrow').map((w, i) => (
+                                    <React.Fragment key={w}>{i > 0 && <span aria-hidden="true">•</span>}<span>{w}</span></React.Fragment>
+                                ))}
+                            </p>
+                            <h1 className="mt-5 max-w-[450px] font-display text-[44px] font-medium leading-[1.04] tracking-[-0.02em] sm:text-[56px] lg:text-[62px]" style={display}>
+                                {t('hero.titleA').split(' ').slice(0, -1).join(' ')}{' '}
+                                <span className="whitespace-nowrap">{t('hero.titleA').split(' ').slice(-1)[0]}{' '}<span className="italic text-[#2e5e45]">{t('hero.titleB')}</span></span>
+                            </h1>
+                            <p className={cn('mt-6 max-w-[500px] text-[18px] leading-8', MUTED)}>{t('hero.lead')}</p>
+                            <div className="mt-8 flex flex-wrap items-center gap-3">
+                                <GetStarted label={t('hero.primary')} className="h-[52px] rounded-full px-7 text-[16px]" />
+                                <a href="#how" className="inline-flex h-[52px] items-center gap-2 rounded-full border border-[#cfc6b6] bg-white/70 px-6 text-[16px] font-semibold text-[#1f2a24] backdrop-blur transition-colors hover:border-[#9f9584]">
+                                    {t('hero.secondary')}<Play className="h-3.5 w-3.5 fill-current" aria-hidden="true" />
+                                </a>
+                            </div>
+                            <ul className="mt-10 flex flex-wrap gap-x-5 gap-y-3">
+                                {list<string>('hero.points').map((p, i) => {
+                                    const Icon = pointIcons[i] ?? Check;
+                                    return (
+                                        <li key={p} className="flex items-center gap-2.5 whitespace-nowrap text-[14px] font-medium leading-5 text-[#3a453f]">
+                                            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/80 text-[#234a36] shadow-[0_1px_2px_rgba(28,25,20,0.08)]"><Icon className="h-4 w-4" aria-hidden="true" /></span>
+                                            {p}
+                                        </li>
+                                    );
+                                })}
+                            </ul>
                         </div>
-                        <ul className="mt-9 flex flex-wrap gap-x-6 gap-y-3">
-                            {list<string>('hero.points').map((p, i) => {
-                                const Icon = pointIcons[i] ?? Check;
-                                return (
-                                    <li key={p} className="flex items-center gap-2 text-[15px] font-medium text-[#3a453f]">
-                                        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#e7efe9] text-[#234a36]"><Icon className="h-4 w-4" aria-hidden="true" /></span>
-                                        {p}
-                                    </li>
-                                );
-                            })}
-                        </ul>
                     </div>
 
-                    <div className="relative">
-                        <div className="relative aspect-[4/3.2] overflow-hidden rounded-[28px] bg-[#1d3328] shadow-[0_30px_60px_-30px_rgba(31,42,36,0.55)] sm:aspect-[16/11]">
-                            <HeroPicture position="80% 45%" />
-                            <span className="sr-only">{t('hero.imageAlt')}</span>
+                    {/* Product previews over the photo (wide screens), labelled as examples */}
+                    <div aria-hidden="true" className="pointer-events-none absolute inset-0 hidden xl:block">
+                        <div className="absolute left-[44%] top-[5%] w-[250px] space-y-2">
+                            <span className="ml-1 inline-block rounded-full bg-white/80 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[#6b6358]">{t('hero.cardExample')}</span>
+                            {list<{ title: string; body: string; time: string }>('hero.cards').map((c, i) => {
+                                const Icon = cardIcons[i];
+                                return (
+                                    <div key={c.title} className="flex items-center gap-3 rounded-[14px] border border-white/60 bg-white/70 px-3.5 py-2 shadow-[0_12px_30px_-14px_rgba(31,42,36,0.45)] backdrop-blur-md">
+                                        <Icon className="h-5 w-5 shrink-0 text-[#234a36]" aria-hidden="true" />
+                                        <span className="min-w-0 flex-1">
+                                            <span className="block text-[13px] font-semibold text-[#1f2a24]">{c.title}</span>
+                                            <span className="block truncate text-[11.5px] text-[#55605a]">{c.body}</span>
+                                            <span className="block text-[11px] text-[#7a847e]">{c.time}</span>
+                                        </span>
+                                        <ChevronRight className="h-4 w-4 text-[#9aa39d]" />
+                                    </div>
+                                );
+                            })}
                         </div>
-                        {/* Product preview, labelled as an example */}
-                        <div className="absolute -bottom-8 left-4 right-4 rounded-[18px] border border-[#ebe4d7] bg-white/95 p-4 shadow-[0_20px_40px_-20px_rgba(31,42,36,0.45)] backdrop-blur sm:left-auto sm:right-[-12px] sm:w-[330px] lg:-left-10 lg:right-auto">
-                            <div className="flex items-center justify-between">
-                                <span className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-[#2f7a4d]">
-                                    <CheckCircle2 className="h-4 w-4" aria-hidden="true" />{t('hero.cardStatus')}
-                                </span>
-                                <span className="rounded-full bg-[#f1efea] px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-[#6b6358]">{t('hero.cardExample')}</span>
-                            </div>
-                            <p className="mt-2 text-[15px] font-semibold">{t('hero.cardDetail')}</p>
-                            <p className={cn('text-[13px]', MUTED)}>{t('hero.cardBaseline')}</p>
-                            <p className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-[#e7efe9] px-2.5 py-1 text-[12px] font-semibold text-[#234a36]">
-                                <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />{t('hero.cardShares')}
-                            </p>
+                        <div className="absolute right-[5%] top-[8%] flex w-[250px] items-center gap-3 rounded-[16px] border border-white/50 bg-white/65 px-3.5 py-3 shadow-[0_16px_36px_-16px_rgba(31,42,36,0.5)] backdrop-blur-md">
+                            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#f6e9e1] text-[#b5643d]"><MessageSquareHeart className="h-5 w-5" /></span>
+                            <span className="min-w-0 flex-1 text-[#1f2a24]">
+                                <span className="block text-[13px] font-semibold">{t('hero.message.from')}</span>
+                                <span className="block text-[12px] text-[#55605a]">{t('hero.message.body')}</span>
+                                <span className="flex items-center gap-1 text-[12px] font-medium">{t('hero.message.note')}<Heart className="h-3 w-3 fill-[#d0574a] text-[#d0574a]" /></span>
+                                <span className="block text-[11px] text-[#7a847e]">{t('hero.message.time')}</span>
+                            </span>
                         </div>
+                        <p className="absolute bottom-[24%] right-[4%] rotate-[-6deg] text-right font-display text-[22px] italic leading-snug text-white [text-shadow:0_2px_12px_rgba(0,0,0,0.45)]" style={display}>
+                            {list<string>('hero.script').map((l) => <span key={l} className="block">{l}</span>)}
+                        </p>
                     </div>
+
+                    {/* Phones and tablets: the photograph below the text */}
+                    <div className="relative mx-4 mb-10 aspect-[4/3] overflow-hidden rounded-[24px] shadow-[0_24px_48px_-28px_rgba(31,42,36,0.6)] sm:mx-6 lg:hidden">
+                        <HeroPicture position="80% 50%" />
+                    </div>
+
+                    {/* Curved lower edge */}
+                    <svg aria-hidden="true" viewBox="0 0 1440 90" preserveAspectRatio="none" className="absolute bottom-0 left-0 hidden h-[90px] w-full lg:block">
+                        <path d="M0 52 C 360 96, 900 8, 1440 46 L1440 90 L0 90 Z" fill="#f7f4ee" />
+                    </svg>
+                </section>
+
+                {/* ── Benefits ── */}
+                <section aria-label={t('nav.families')} className="bg-[#f7f4ee] pb-16 lg:pb-20">
+                    <ul className="mx-auto grid max-w-[1280px] gap-8 px-4 sm:grid-cols-2 sm:px-6 lg:grid-cols-4">
+                        {list<Item>('benefits').map((b, i) => {
+                            const Icon = benefitIcons[i];
+                            return (
+                                <li key={b.title} className="flex gap-4">
+                                    <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#e7efe9] text-[#234a36]"><Icon className="h-5 w-5" aria-hidden="true" /></span>
+                                    <span>
+                                        <span className="block text-[16px] font-semibold">{b.title}</span>
+                                        <span className={cn('mt-1 block text-[14px] leading-6', MUTED)}>{b.body}</span>
+                                    </span>
+                                </li>
+                            );
+                        })}
+                    </ul>
                 </section>
 
                 {/* ── How it works ── */}
@@ -245,7 +299,7 @@ const Landing: React.FC = () => {
                         <div className="relative z-10 mx-auto max-w-xl">
                             <h2 className="font-display text-[32px] font-medium leading-tight sm:text-[40px]" style={display}>{t('cta.title')}</h2>
                             <p className="mt-3 text-[17px] text-white/85">{t('cta.body')}</p>
-                            <Link to="/login?mode=register" className="mt-8 inline-flex h-[52px] items-center gap-2 rounded-[10px] bg-white px-7 text-[16px] font-semibold text-[#1f3a2c] transition-colors hover:bg-[#f1efe7]">
+                            <Link to="/login" className="mt-8 inline-flex h-[52px] items-center gap-2 rounded-[10px] bg-white px-7 text-[16px] font-semibold text-[#1f3a2c] transition-colors hover:bg-[#f1efe7]">
                                 {t('cta.button')}<ArrowRight className="h-4 w-4" aria-hidden="true" />
                             </Link>
                         </div>

@@ -12,47 +12,112 @@
     "close": "Close menu"
   },
   "hero": {
-    "eyebrow": "Family presence for aging parents",
-    "titleA": "Know Mom had a normal day.",
-    "titleB": "Let Mom decide what you see.",
-    "lead": "Hearth turns the home sensors and the screen your parent already uses into a calm daily signal for the family, with a plain explanation when something changes. No cameras, no pendants, and the parent stays in control.",
+    "eyebrow": [
+      "Presence",
+      "Dignity",
+      "Peace of mind"
+    ],
+    "titleA": "A calmer way to care for the people",
+    "titleB": "you love",
+    "lead": "Hearth connects what is already in your parent's home, like a Ring doorbell, Alexa+ and simple home sensors, to give you daily peace of mind. No video, no intrusion, and your parent always in control.",
     "primary": "Get Started",
     "secondary": "See how it works",
-    "points": ["No cameras", "Parent-controlled sharing", "Open source, self-hosted"],
+    "points": [
+      "Uses devices they have",
+      "Privacy by design",
+      "Parent in control"
+    ],
     "cardExample": "Example",
-    "cardStatus": "Normal pattern observed",
-    "cardDetail": "Day started 7:42, within the usual window",
-    "cardBaseline": "Compared with 12 days of her routine",
-    "cardShares": "Margaret shares: Rhythm",
+    "cards": [
+      {
+        "title": "Today looks good",
+        "body": "Normal activity at home",
+        "time": "10:24 AM"
+      },
+      {
+        "title": "Front door",
+        "body": "Opened at 9:12 AM",
+        "time": "Ring · All good"
+      },
+      {
+        "title": "Alexa+",
+        "body": "Sam asked “How is Mom?”",
+        "time": "Answered with Rhythm"
+      }
+    ],
+    "message": {
+      "from": "Daughter",
+      "body": "Sent a video message",
+      "note": "We love you!",
+      "time": "2h ago"
+    },
+    "script": [
+      "Real moments",
+      "Real connection",
+      "A calmer you"
+    ],
     "imageAlt": "An older woman smiling in her living room while her family waves from a video call on the TV"
   },
   "how": {
     "eyebrow": "How it works",
     "title": "A quiet signal, not a camera.",
     "steps": [
-      { "title": "Connect what is already there", "body": "Door, motion and appliance sensors through Home Assistant, plus a check-in button on the parent's Hearth screen. Nothing new to wear." },
-      { "title": "Hearth learns the routine", "body": "After seven days it knows a usual morning. Until then it says \"not enough data\" instead of guessing." },
-      { "title": "The family gets a calm daily status", "body": "Normal, worth a look, or no signal, always with how Hearth knows and one suggested next step." }
+      {
+        "title": "Connect what is already there",
+        "body": "Door, motion and appliance sensors through Home Assistant, plus a check-in button on the parent's Hearth screen. Nothing new to wear."
+      },
+      {
+        "title": "Hearth learns the routine",
+        "body": "After seven days it knows a usual morning. Until then it says \"not enough data\" instead of guessing."
+      },
+      {
+        "title": "The family gets a calm daily status",
+        "body": "Normal, worth a look, or no signal, always with how Hearth knows and one suggested next step."
+      }
     ]
   },
   "families": {
     "eyebrow": "For families",
     "title": "Less worry, fewer group-chat threads.",
     "items": [
-      { "title": "Why Cards", "body": "When a morning is quieter than usual you get what was observed, the usual pattern, the evidence and one proportionate step, like a call." },
-      { "title": "Piggyback Planner", "body": "Visiting Saturday? Hearth suggests the errand that fits your trip. Nothing is assigned until you say yes." },
-      { "title": "Moments", "body": "Send a short message or video that appears on your parent's Hearth screen, and see when it was seen." },
-      { "title": "Ask with Alexa+", "body": "A Hearth MCP connector answers \"how is Mom doing?\" with exactly what she shares. Live Alexa+ connection is still in testing." }
+      {
+        "title": "Why Cards",
+        "body": "When a morning is quieter than usual you get what was observed, the usual pattern, the evidence and one proportionate step, like a call."
+      },
+      {
+        "title": "Piggyback Planner",
+        "body": "Visiting Saturday? Hearth suggests the errand that fits your trip. Nothing is assigned until you say yes."
+      },
+      {
+        "title": "Moments",
+        "body": "Send a short message or video that appears on your parent's Hearth screen, and see when it was seen."
+      },
+      {
+        "title": "Ask with Alexa+",
+        "body": "A Hearth MCP connector answers \"how is Mom doing?\" with exactly what she shares. Live Alexa+ connection is still in testing."
+      }
     ]
   },
   "parents": {
     "eyebrow": "For parents",
     "title": "Your home, your rules.",
     "items": [
-      { "title": "Choose what the family sees", "body": "Four simple levels, from a status only to more detail for a few days after a hospital stay. It goes back by itself." },
-      { "title": "See who looked", "body": "The Trust Ledger lists every time someone viewed your information and every change, in plain words." },
-      { "title": "I'm away", "body": "Visiting your sister? One tap and nobody worries about a quiet house." },
-      { "title": "Big, calm screen", "body": "Large buttons, readable type, messages from family, and an honest help button." }
+      {
+        "title": "Choose what the family sees",
+        "body": "Four simple levels, from a status only to more detail for a few days after a hospital stay. It goes back by itself."
+      },
+      {
+        "title": "See who looked",
+        "body": "The Trust Ledger lists every time someone viewed your information and every change, in plain words."
+      },
+      {
+        "title": "I'm away",
+        "body": "Visiting your sister? One tap and nobody worries about a quiet house."
+      },
+      {
+        "title": "Big, calm screen",
+        "body": "Large buttons, readable type, messages from family, and an honest help button."
+      }
     ]
   },
   "privacy": {
@@ -60,10 +125,22 @@
     "title": "The parent's choice is enforced on the server.",
     "lead": "The Glimpse Dial is not a hidden panel in an app. Every answer, in the family app or through Alexa+, is built from the fields the parent allows, and every disclosure is recorded.",
     "levels": [
-      { "name": "Light", "body": "Status only" },
-      { "name": "Rhythm", "body": "+ timings" },
-      { "name": "Glimpse", "body": "+ short event notes" },
-      { "name": "Recovery", "body": "+ chosen extras, for a few days" }
+      {
+        "name": "Light",
+        "body": "Status only"
+      },
+      {
+        "name": "Rhythm",
+        "body": "+ timings"
+      },
+      {
+        "name": "Glimpse",
+        "body": "+ short event notes"
+      },
+      {
+        "name": "Recovery",
+        "body": "+ chosen extras, for a few days"
+      }
     ],
     "facts": [
       "Family members cannot raise the level. Only the parent, or a delegate the parent names.",
@@ -79,7 +156,12 @@
       "name": "Self-hosted",
       "price": "Free",
       "note": "AGPL-3.0, on your own server or a home computer",
-      "features": ["Family dashboard and Why Cards", "Parent screen and Glimpse Dial", "Trust Ledger", "Alexa+ MCP connector"],
+      "features": [
+        "Family dashboard and Why Cards",
+        "Parent screen and Glimpse Dial",
+        "Trust Ledger",
+        "Alexa+ MCP connector"
+      ],
       "cta": "Get Started"
     },
     "hosted": {
@@ -97,5 +179,23 @@
     "tagline": "Family presence for aging parents.",
     "attribution": "Built on OpenCare by NexaFlow, licensed AGPL-3.0.",
     "disclaimer": "Hearth is not a medical device or an emergency service. In an emergency, call your local emergency number."
-  }
+  },
+  "benefits": [
+    {
+      "title": "Daily reassurance",
+      "body": "A simple daily signal that your loved one is doing well."
+    },
+    {
+      "title": "Less coordination stress",
+      "body": "Visits, errands and tasks organised in one place."
+    },
+    {
+      "title": "More meaningful connection",
+      "body": "Send messages and short videos to your parent's Hearth screen."
+    },
+    {
+      "title": "Built for privacy",
+      "body": "No video, ever. Your parent chooses what to share."
+    }
+  ]
 }
