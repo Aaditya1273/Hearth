@@ -4,6 +4,18 @@
 >
 > Hearth is built on [OpenCare](https://github.com/NexaFlowFrance/OpenCare) (AGPL-3.0). It is not a medical device or an emergency service.
 
+## Live demo
+
+**https://15-252-243-54.sslip.io** (AWS EC2, Mumbai). All sensor data in the demo is **simulated** and labelled so.
+
+| Login | Role |
+| --- | --- |
+| `alex@demo.hearth.test` | admin (adult child, sees both circles) |
+| `sam@demo.hearth.test` | family |
+| `jordan@demo.hearth.test` | viewer |
+
+Password for every demo account: `HearthDemo!2026`. Ask Hearth shows a labelled basic answer until AWS lifts the Bedrock hold on our new account.
+
 ## What works today
 
 This repository is a working app (Express + PostgreSQL + React), not a mockup. Everything below runs locally and is covered by tests unless the row says otherwise.
@@ -25,7 +37,7 @@ This repository is a working app (Express + PostgreSQL + React), not a mockup. E
 | Presence events from Home Assistant (webhook, idempotent `event_id`) | Working (existing OpenCare feature, extended) | `POST /api/presence/webhook/...` |
 | Deterministic simulator and demo seed | Working, tested; demo circles only; every event flagged simulated | `npm run demo:seed` |
 | Connection to the live Alexa+ service | **Not done**: needs Amazon developer access. The MCP server has only been exercised by the SDK client in tests | |
-| Ring, Fire TV / Vega OS, Bee | **Not built.** No credentials, devices or simulators were available; nothing in the code claims otherwise | |
+| Fire TV / Vega OS, Bee | **Not built.** The Vega Virtual Device does not run web views on Linux, and no Bee device was available | |
 | TV delivery of moments | **Not available**; every moment says so | |
 
 Hearth screens are in English. The rest of the OpenCare app keeps its French, English and Spanish translations.
